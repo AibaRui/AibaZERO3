@@ -1,0 +1,199 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class PlayerInBattle : MonoBehaviour
+{
+    [SerializeField] float _moveSpeed = 2;
+    [SerializeField] float _jumpPower = 4;
+
+    bool _isGround = false;
+    bool _isJump = false;
+    bool _isRun = false;
+    Rigidbody _rb;
+    Animator _anim;
+    // SpriteRenderer _sp;
+
+    [SerializeField] P_Kaihi _kaihi;
+    [SerializeField] AttackClose attackClose;
+
+    PauseManager _pauseManager = default;
+    Vector3 _angularVelocity;
+    Vector3 _velocity;
+
+
+    void Start()
+    {
+        _rb = GetComponent<Rigidbody>();
+        _anim = GetComponent<Animator>();
+        // _sp = GetComponent<SpriteRenderer>();
+    }
+
+
+    void Update()
+    {
+        if (!_pauseManager._isPause)
+        {
+            Anim();
+            Jump();
+            if (!_kaihi._isDodges || !_kaihi._isDodging)
+            {
+                if (!attackClose._closeAttack)
+                {
+                    Move();
+                }
+            }
+        }
+    }
+    void FixedUpdate()
+    {
+        if (!_pauseManager._isPause)
+        {
+            IsJump();
+        }
+    }
+
+
+    void Jump()
+    {
+        if (_isGround)
+        {
+            if (Input.GetButton("Jump"))
+            {
+                _anim.SetBool("Jump", true);
+                _isJump = true;
+            }
+        }
+    }
+
+    void IsJump()
+    {
+        if (_isJump)
+        {
+            _rb.AddForce(transform.up * _jumpPower, ForceMode.Impulse);
+            _isJump = false;
+            _isGround = false;
+        }
+
+    }
+
+
+    void Move()
+    {
+        float _h = Input.GetAxisRaw("Horizontal");
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            _isRun = !_isRun;
+            if (_isRun)
+            {
+                _moveSpeed = 4;
+            }
+            else
+
+            {
+                _moveSpeed = 2;
+            }
+
+        }
+
+        if (_h != 0)
+        {
+            Vector2 velo = new Vector2(_h * _moveSpeed, _rb.velocity.y);
+            _rb.velocity = velo;
+        }
+
+        if (_h > 0)
+        {
+            transform.localScale = new Vector3(1, 1, 1);
+            // _sp.flipX = false;
+        }
+        else if (_h < 0)
+        {
+            transform.localScale = new Vector3(-1, 1, 1);
+            // _sp.flipX = true;
+        }
+
+    }
+
+    void Anim()
+    {
+        if (_rb.velocity.x != 0 || _rb.velocity.z != 0)
+        {
+            _anim.SetBool("WalkNomal", true);
+        }
+        else
+        {
+            _anim.SetBool("WalkNomal", false);
+        }
+
+
+
+    }
+
+
+
+    public void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "Ground")
+        {
+            _anim.SetBool("Jump", false);
+
+
+            _isGround = true;
+        }
+    }
+
+    ///////Parse処理/////
+
+    private void Awake()
+    {
+        _pauseManager = GameObject.FindObjectOfType<PauseManager>();
+    }
+
+    void OnEnable()
+    {
+        // 呼んで欲しいメソッドを登録する。
+        _pauseManager.OnPauseResume += PauseResume;
+        _anim = gameObject.GetComponent<Animator>();
+    }
+
+    void OnDisable()
+    {
+        // OnDisable ではメソッドの登録を解除すること。さもないとオブジェクトが無効にされたり破棄されたりした後にエラーになってしまう。
+        _pauseManager.OnPauseResume -= PauseResume;
+    }
+
+    void PauseResume(bool isPause)
+    {
+        if (isPause)
+        {
+            Pause();
+        }
+        else
+        {
+            Resume();
+        }
+    }
+
+    public void Pause()
+    {
+        // 速度・回転を保存し、Rigidbody を停止する
+        _angularVelocity = _rb.angularVelocity;
+        _velocity = _rb.velocity;
+        _rb.Sleep();
+        _rb.isKinematic = true;
+        _anim.enabled = false;
+    }
+
+    public void Resume()
+    {
+        // Rigidbody の活動を再開し、保存しておいた速度・回転を戻す
+        _rb.WakeUp();
+        _rb.angularVelocity = _angularVelocity;
+        _rb.velocity = _velocity;
+        _rb.isKinematic = false;
+
+        _anim.enabled = true;
+    }
+}
