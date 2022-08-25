@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: OnTheLight 1
+  m_Name: OnTheLight 2
   m_Shader: {fileID: 4800000, guid: 82a3de1f1fa66694794ccc8ab2171231, type: 3}
   m_ValidKeywords:
   - _ALPHATEST_ON
