@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/Qest1.unity
+    guid: f1795f7756ce0944e978d4cb383cb634
   m_configObjects: {}
