@@ -16,7 +16,7 @@ public class FireAttack2 : MonoBehaviour
 
     [SerializeField] TargetSystem _targetSystem;
 
-    [SerializeField] AttackClose _attackClose;
+    [SerializeField] AttackCloseController _attackCloseController;
 
 
     ////////ãÛíÜÇÃÇªÇÍÇºÇÍÇÃà⁄ìÆêßå¿//////////////////////////////////////////////
@@ -52,7 +52,7 @@ public class FireAttack2 : MonoBehaviour
             AirTime();
         }
 
-        if (!_attackClose._isAttackNow)
+        if (!_attackCloseController._isAttackNow)
         {
             Charge();
             Attack();

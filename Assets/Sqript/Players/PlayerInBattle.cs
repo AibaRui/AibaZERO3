@@ -15,7 +15,7 @@ public class PlayerInBattle : MonoBehaviour
     // SpriteRenderer _sp;
 
     [SerializeField] P_Kaihi _kaihi;
-    [SerializeField] AttackClose attackClose;
+    [SerializeField] AttackCloseController _attackCloseController;
 
     PauseManager _pauseManager = default;
     Vector3 _angularVelocity;
@@ -38,7 +38,7 @@ public class PlayerInBattle : MonoBehaviour
             Jump();
             if (!_kaihi._isDodges || !_kaihi._isDodging)
             {
-                if (!attackClose._closeAttack)
+                if (!_attackCloseController._closeAttack)
                 {
                     Move();
                 }

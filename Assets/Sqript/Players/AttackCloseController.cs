@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 
-public class AttackClose : MonoBehaviour
+public class AttackCloseController : MonoBehaviour
 {
-
     [SerializeField] int _attackZanryou = 10;
+
+    [SerializeField] RisingAttack _risingAttack;
+    [SerializeField] DownAttack _downAttack;
+    [SerializeField] NomalAttack _nomalAttack;
 
     [Header("必要なオブジェクト")]
     ///<summary>クロスヘアーのスクリプト</summary>
@@ -77,9 +80,7 @@ public class AttackClose : MonoBehaviour
     int _upAttackCount = 0;
 
     ///////////////////////////////////////////////攻撃の判断////////////////
-    ///
-    /// <summary>下攻撃の降下中であるかどうか </summary>
-    public bool _isDownNow = false;
+ 
     /// <summary>攻撃中であるかどうか </summary>
     public bool _isAttackNow = false;
 
@@ -95,7 +96,7 @@ public class AttackClose : MonoBehaviour
 
 
     /// <summary>攻撃可能かどうかの判定</summary>
-    bool okAttack = false;
+   public bool okAttack = false;
     /// <summary>攻撃コンボ持続中かどうかの判定</summary>
     bool _isAttackContnue = false;
 
@@ -286,32 +287,6 @@ public class AttackClose : MonoBehaviour
                 }
             }
 
-            if (_isDownNow && _isGround)
-            {
-                _isAttackContnue = false;
-                okAttack = false;
-                var effect = Instantiate(_downAttackEffect); //エフェクトを出す
-                effect.transform.position = transform.position;
-                _isDownNow = false;
-                _weaponAnim.Play("DownAttack");
-            }
-
-            if (_pushdKey == PushdKey.RisingAttack)
-            {
-                if (distance > _movedDistanceUp && _risingAttackCount < 3)
-                {
-                    _closeAttack = false;
-                    _rb.velocity = Vector3.zero;
-                    _downSpeed = true;
-                }
-                else if (_risingAttackCount > 3)
-                {
-                    //_rb.velocity = Vector3.zero;
-
-                }
-
-            }
-
             if (_pushdKey == PushdKey.UpAttack)
             {
                 _closeAttack = false;
@@ -398,26 +373,9 @@ public class AttackClose : MonoBehaviour
         float h = Input.GetAxis("Horizontal");
         float v = Input.GetAxis("Vertical");
 
-
-        if (v > 0)
-        {
-            _isUpAttack = true;
-        }
-        else if (v < 0)
-        {
-            _isDownAttack = true;
-        }
-        else
-        {
-            _isUpAttack = false;
-            _isDownAttack = false;
-        }
-
         if (Input.GetMouseButtonDown(0))
         {
             Debug.Log("キー:" + _isUpAttack);
-
-
 
             StartCoroutine(ReleaseAttackStiffenss());
             _nowPos = this.transform.position;
@@ -430,34 +388,28 @@ public class AttackClose : MonoBehaviour
             if (targetSystem._targetEnemy != null)
             {
                 _pushdKey = PushdKey.Target;
-                AttackdMove();
+                _targetCloseAttack.Attack();
                 return;
             }
 
             _attackCount++;
 
 
-            if (_isDownAttack)
+            if (v<0)
             {
-
+                _closeAttack = true;
                 _pushdKey = PushdKey.DownAttack;
-                _isDownNow = true;
-                airTime = 0;
-                _downSpeed = false;
-                AttackdMove();
-                Effects();
-
+                _downAttack.Attack();
                 return;
             }
 
 
-            if (_isUpAttack && _risingAttackCount < 3)            //上昇攻撃
+            if (v>0) //&& _risingAttackCount < 3)            //上昇攻撃
             {
-
+                _closeAttack = true;
                 _pushdKey = PushdKey.RisingAttack;
-                _risingAttackCount++;
-                AttackdMove();
-                Effects();
+                _risingAttack.Attack();
+                _risingAttack.Effect();
                 return;
             }
 
@@ -494,8 +446,7 @@ public class AttackClose : MonoBehaviour
             if (h == 0)  //その場攻撃
             {
                 _pushdKey = PushdKey.NoMove;
-                AttackdMove();
-                Effects();
+                _nomalAttack.NoMoveAttackEffeck();
             }
 
         }
@@ -556,7 +507,6 @@ public class AttackClose : MonoBehaviour
 
     void AttackdMove()
     {
-
         _closeAttack = true;
         airTime = 0;
         Direction();
@@ -564,15 +514,6 @@ public class AttackClose : MonoBehaviour
         {
             _downSpeed = true;
         }
-
-        if (_pushdKey == PushdKey.Target)
-        {
-            // _downSpeed = true;
-            _targetCloseAttack.Attack();
-            return;
-        }
-
-
 
         if (_pushdKey == PushdKey.MoveX)
         {
@@ -585,20 +526,7 @@ public class AttackClose : MonoBehaviour
             _rb.AddForce(ve * transform.right * _attackMovedPower, ForceMode.Impulse);
 
         }
-        if (_pushdKey == PushdKey.RisingAttack)
-        {
-            if (_risingAttackCount < 3)
-            {
-                Vector3 velo = _crosshairController.transform.position - transform.position;
-                Vector3 mousPos = new Vector3(velo.normalized.x, Mathf.Abs(velo.normalized.y), velo.normalized.z);
-                _rb.AddForce(mousPos * _attackMovedPower, ForceMode.Impulse);
-            }
-            else
-            {
-                return;
-            }
-
-        }
+       
         if (_pushdKey == PushdKey.UpMoveAttack)
         {
             _rb.AddForce(_crosshairController.gameObject.transform.position.x * transform.right * _attackMovedPower, ForceMode.Impulse);
@@ -607,11 +535,7 @@ public class AttackClose : MonoBehaviour
         //{
         //    _rb.velocity = Vector3.zero;
         //}
-        if (_pushdKey == PushdKey.DownAttack)
-        {
-            // Vector3 mousPos = new Vector3(_crosshairController.transform.position.normalized.x, -1 * Mathf.Abs(_crosshairController.transform.position.normalized.y));
-            _rb.AddForce(-1 * transform.up * _dawnAttackMovePower, ForceMode.Impulse);
-        }
+
 
     }
 
@@ -653,37 +577,7 @@ public class AttackClose : MonoBehaviour
             }
         }
 
-        if (_pushdKey == PushdKey.DownAttack)        //降下アタック
-        {
-            Debug.Log("Down");
-            //_isAttackContnue = false;
-            //okAttack = false;
-            return;
-        }
 
-        if (_pushdKey == PushdKey.RisingAttack)
-        {
-            //上昇攻撃
-            if (_risingAttackCount == 1)
-            {
-                Debug.Log("raizing1");
-            }
-            else if (_risingAttackCount == 2)
-            {
-                Debug.Log("raizing2");
-            }
-            else if (_risingAttackCount == 3)
-            {
-                Debug.Log("raizing");
-                airTime = 0;
-                _downSpeed = false;
-                return;
-            }
-            else
-            {
-                Debug.Log("NoneRaizing");
-            }
-        }
 
         if (_pushdKey == PushdKey.UpMoveAttack)
         {
@@ -792,17 +686,7 @@ public class AttackClose : MonoBehaviour
             //    _isAttackContnue = false;
             //   // okAttack = false;     //攻撃を不可。クールタイムを数える
             //    airTime = 0;
-            //}
-
-            if (_isDownNow)         //降下攻撃のエフェクト
-            {
-                _weaponAnim.Play("DownAttack");
-                _isAttackContnue = false;
-                // okAttack = false;
-                var effect = Instantiate(_downAttackEffect); //エフェクトを出す
-                effect.transform.position = transform.position;
-                _isDownNow = false;
-            }
+            //}   
         }
     }
 

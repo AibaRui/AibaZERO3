@@ -12,7 +12,7 @@ public class TargetCloseAttack : MonoBehaviour
     [Header("敵を格納する空のオブジェクト")]
     [SerializeField] GameObject _enemyBox;
     [Header("プレイヤー自身の近接攻撃のスクリプト")]
-    [SerializeField] AttackClose _attackClose;
+    [SerializeField] AttackCloseController _attackCloseController;
 
     [Header("敵を引き寄せたい場所")]
     [SerializeField] Transform _attractPos;
@@ -79,7 +79,7 @@ public class TargetCloseAttack : MonoBehaviour
 
         if (_isOkTargetAttack)
         {
-            _attackClose.airTime = 0;
+            _attackCloseController.airTime = 0;
             if (dir <= 2)      //ターゲットが近い時
             {
                 //それぞれの向いてる角度で-45~45度までの範囲に入っているか。
@@ -96,13 +96,13 @@ public class TargetCloseAttack : MonoBehaviour
 
                         _isReleaceEnemy = false;
 
-                        _attackClose._downSpeed = false;
+                        _attackCloseController._downSpeed = false;
                         _targetAttackCount = 0;
                         _releaseEnemyCount = 0;
                     }
                     else
                     {
-                        _attackClose._downSpeed = true;
+                        _attackCloseController._downSpeed = true;
                         targetSystem._targetEnemy.transform.SetParent(_enemyBox.transform); //敵を自身の子オブジェクトにする
                         StartCoroutine(TargetAttackNear());
 
@@ -131,7 +131,7 @@ public class TargetCloseAttack : MonoBehaviour
                     transform.localScale = new Vector3(-1, 1, 1);
                 }
 
-                _attackClose._downSpeed = true;
+                _attackCloseController._downSpeed = true;
                 StartCoroutine(TargetAttackFar());
 
                 _releaseEnemyCount = 0;
@@ -164,10 +164,10 @@ public class TargetCloseAttack : MonoBehaviour
 
             yield return new WaitForSeconds(0.2f);
 
-            if (_attackClose._isGround == true)
+            if (_attackCloseController._isGround == true)
             {
-                _attackClose._isAttackNow = false;
-                _attackClose._closeAttack = false;
+                _attackCloseController._isAttackNow = false;
+                _attackCloseController._closeAttack = false;
             }
         }
     }
@@ -190,7 +190,7 @@ public class TargetCloseAttack : MonoBehaviour
     {
         Vector2 hani = _crosshairController.transform.position - transform.position;
 
-        _attackClose._isRevarseTargetAttack = true;
+        _attackCloseController._isRevarseTargetAttack = true;
         _targetAttackCount = 0;    //ターゲット攻撃の値のリセット
         _releaseEnemyCount = 0;
         _isReleaceEnemy = false;
@@ -206,7 +206,7 @@ public class TargetCloseAttack : MonoBehaviour
 
         yield return new WaitForSeconds(0.5f);
 
-        _attackClose._downSpeed = false;
+        _attackCloseController._downSpeed = false;
 
         StartCoroutine(TargetEnemyCoolTime());
         if (hani.x >= 0)
@@ -241,11 +241,11 @@ public class TargetCloseAttack : MonoBehaviour
 
     public IEnumerator TestMoveEnd()
     {
-        if (_attackClose._isGround || _attackClose._attackCount == 5)
+        if (_attackCloseController._isGround || _attackCloseController._attackCount == 5)
         {
             yield return new WaitForSeconds(0.3f);
-            _attackClose._closeAttack = false;
-            _attackClose._isAttackNow = false;
+            _attackCloseController._closeAttack = false;
+            _attackCloseController._isAttackNow = false;
         }
     }
 
@@ -272,10 +272,10 @@ public class TargetCloseAttack : MonoBehaviour
             StartCoroutine(TestMoveEnd());
 
 
-            _attackClose._closeAttack = false;
-            _attackClose._isAttackNow = false;
-            _attackClose.airTime = 0;
-            _attackClose._downSpeed = false;
+            _attackCloseController._closeAttack = false;
+            _attackCloseController._isAttackNow = false;
+            _attackCloseController.airTime = 0;
+            _attackCloseController._downSpeed = false;
 
         }
 

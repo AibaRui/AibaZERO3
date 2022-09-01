@@ -6,11 +6,11 @@ public class DownEffectControl : MonoBehaviour
 {
     [SerializeField] float _lifetimeCount;
     [SerializeField] float _lifetimeCountLimit;
-    AttackClose _attackClose;
+    AttackCloseController _attackClose;
 
     void Start()
     {
-        _attackClose = FindObjectOfType<AttackClose>();
+        _attackClose = FindObjectOfType<AttackCloseController>();
     }
 
     // Update is called once per frame

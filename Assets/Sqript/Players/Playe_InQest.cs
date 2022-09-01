@@ -15,7 +15,7 @@ public class Playe_InQest : MonoBehaviour
     // SpriteRenderer _sp;
 
     [SerializeField] P_Kaihi _kaihi;
-    [SerializeField] AttackClose attackClose;
+    [SerializeField] AttackCloseController attackClose;
 
     void Start()
     {

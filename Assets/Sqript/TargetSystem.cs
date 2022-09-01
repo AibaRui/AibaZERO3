@@ -14,7 +14,7 @@ public class TargetSystem : MonoBehaviour
     public GameObject _teleportTargetEnemy = null;
     [SerializeField] GameObject player;
 
-    [SerializeField] AttackClose _attackClose;
+    [SerializeField] AttackCloseController _attackClose;
 
     [SerializeField] GameObject _targetUI;
 
