@@ -28,6 +28,8 @@ public class TargetCloseAttack : MonoBehaviour
     [Tooltip("引き寄せた敵を離すまでの時間")] [SerializeField] float _releaseEnemyCountLimit = 2;
 
 
+    [SerializeField] float _moveDistance = 2;
+
     /// <summary>攻撃した回数を記す</summary>
     int _targetAttackCount = 0;
     /// <summary>攻撃した時の場所を記す</summary>
@@ -42,6 +44,9 @@ public class TargetCloseAttack : MonoBehaviour
     bool _isReleaceEnemy;
     /// <summary>攻撃可能か同課の判断</summary>
     bool _isOkTargetAttack = true;
+
+
+    bool _isRevarseTargetAttack=false;
 
     PauseManager _pauseManager = default;
     Rigidbody _rb;
@@ -65,11 +70,42 @@ public class TargetCloseAttack : MonoBehaviour
                 ReleaseEnemy();
             }
         }
+
+        MoveEnd();
+
+    }
+
+    void MoveEnd()
+    {
+        if (_attackCloseController._closeAttack)
+        {
+            float distance = Vector3.Distance(_nowPos, transform.position);
+
+            if (_isRevarseTargetAttack) //敵を離すとき
+            {
+
+                if (distance > _moveDistance)
+                {
+                    _isRevarseTargetAttack = false;
+                    _rb.velocity = Vector3.zero;
+                    _attackCloseController._closeAttack = false;
+                }
+            }
+            else
+            {
+                if (distance > _moveDistance)
+                {
+                    _rb.velocity = Vector3.zero;
+                    _attackCloseController._closeAttack = false;
+                }
+            }
+        }
     }
 
 
     public void Attack()
     {
+        Direction();
         _rb = gameObject.GetComponent<Rigidbody>();
 
         float dir = Vector2.Distance(targetSystem._targetEnemy.transform.position, transform.position);
@@ -190,7 +226,7 @@ public class TargetCloseAttack : MonoBehaviour
     {
         Vector2 hani = _crosshairController.transform.position - transform.position;
 
-        _attackCloseController._isRevarseTargetAttack = true;
+        _isRevarseTargetAttack = true;
         _targetAttackCount = 0;    //ターゲット攻撃の値のリセット
         _releaseEnemyCount = 0;
         _isReleaceEnemy = false;
@@ -281,5 +317,19 @@ public class TargetCloseAttack : MonoBehaviour
 
     }
 
+    void Direction()
+    {
+        Vector3 muki;
+        if (targetSystem._targetEnemy.transform.position.x - transform.position.x > 0)
+        {
+            muki = new Vector3(1, transform.localScale.y, transform.localScale.z);
+            transform.localScale = muki;
+        }
+        else
+        {
+            muki = new Vector3(-1, transform.localScale.y, transform.localScale.z);
+            transform.localScale = muki;
+        }
+    }
 
 }

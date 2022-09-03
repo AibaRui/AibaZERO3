@@ -65,7 +65,7 @@ public class AttackCloseController : MonoBehaviour
     PushdKey _pushdKey = PushdKey.NoMove;
 
     /// <summary>UŒ‚ŠJn‚ÌêŠ</summary>
-    Vector3 _nowPos;
+    public Vector3 _nowPos;
 
     ///////////////////////////////////////////////UŒ‚‰ñ”////////////////
 
@@ -80,7 +80,7 @@ public class AttackCloseController : MonoBehaviour
     int _upAttackCount = 0;
 
     ///////////////////////////////////////////////UŒ‚‚Ì”»’f////////////////
- 
+
     /// <summary>UŒ‚’†‚Å‚ ‚é‚©‚Ç‚¤‚© </summary>
     public bool _isAttackNow = false;
 
@@ -96,7 +96,7 @@ public class AttackCloseController : MonoBehaviour
 
 
     /// <summary>UŒ‚‰Â”\‚©‚Ç‚¤‚©‚Ì”»’è</summary>
-   public bool okAttack = false;
+    public bool okAttack = false;
     /// <summary>UŒ‚ƒRƒ“ƒ{‘±’†‚©‚Ç‚¤‚©‚Ì”»’è</summary>
     bool _isAttackContnue = false;
 
@@ -134,7 +134,6 @@ public class AttackCloseController : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody>();
         _weaponAnim = _weaponAnim.GetComponent<Animator>();
-
 
     }
 
@@ -185,9 +184,6 @@ public class AttackCloseController : MonoBehaviour
                 _rb.useGravity = true;
             }
 
-            //UŒ‚d’¼‰ğœ‚Ì”»’è
-            judgeMovedEnd();
-
         }
     }
 
@@ -235,99 +231,15 @@ public class AttackCloseController : MonoBehaviour
         {
             yield return new WaitForSeconds(_attackLate);
         }
-        else if (_pushdKey == PushdKey.MoveX)
-        {
-            yield return new WaitForSeconds(_attackLate);
-            _closeAttack = false;
-        }
-        else
-        {
-            yield return new WaitForSeconds(_attackLate);
-        }
+       
 
-        _isAttackNow = false;
+      //  _isAttackNow = false;
         if (_enemyBox.transform.childCount != 0)
         {
             //_enemyBox.transform.DetachChildren();
         }
-
-        if (_pushdKey == PushdKey.MoveX)
-        {
-            _closeAttack = false;
-        }
     }
 
-    /// <summary>d’¼‰ğœ‚ÌŠÖ”</summary>
-    void judgeMovedEnd()
-    {
-        if (_closeAttack)
-        {
-
-            float distance = Vector3.Distance(_nowPos, transform.position);
-
-            if (_pushdKey == PushdKey.Target)
-            {
-                if (_isRevarseTargetAttack)
-                {
-
-                    if (distance > _movedDistanceX)
-                    {
-                        _isRevarseTargetAttack = false;
-                        _rb.velocity = Vector3.zero;
-                        _closeAttack = false;
-                    }
-                }
-                else
-                {
-                    if (distance > _movedDistanceX)
-                    {
-                        _rb.velocity = Vector3.zero;
-                        _closeAttack = false;
-                    }
-                }
-            }
-
-            if (_pushdKey == PushdKey.UpAttack)
-            {
-                _closeAttack = false;
-                _rb.velocity = Vector3.zero;
-
-            }
-
-
-            if (_pushdKey == PushdKey.UpMoveAttack)
-            {
-                if (distance > _movedDistanceUpX)
-                {
-                    _closeAttack = false;
-                    _rb.velocity = Vector3.zero;
-                }
-
-            }
-
-            if (_pushdKey == PushdKey.MoveX)
-            {
-                if (distance > 4)
-                {
-                    _closeAttack = false;
-                    Debug.Log("ffx");
-                    _rb.velocity = Vector3.zero;
-                }
-            }
-
-            if (_pushdKey == PushdKey.NoMove)
-            {
-                if (distance > _movedDistanceX)
-                {
-
-                    _rb.velocity = Vector3.zero;
-                    _closeAttack = false;
-                }
-            }
-
-
-        }
-    }
     /// <summary>ƒN[ƒ‹ƒ^ƒCƒ€‚ÌŒv‘ª</summary>
     void CountCoolTime()
     {
@@ -349,7 +261,6 @@ public class AttackCloseController : MonoBehaviour
 
     void ResetCount()
     {
-
         if (Input.GetMouseButton(0))
         {
             _countResetTime += Time.deltaTime;
@@ -395,7 +306,7 @@ public class AttackCloseController : MonoBehaviour
             _attackCount++;
 
 
-            if (v<0)
+            if (v < 0)                                //‰ºUŒ‚
             {
                 _closeAttack = true;
                 _pushdKey = PushdKey.DownAttack;
@@ -403,8 +314,7 @@ public class AttackCloseController : MonoBehaviour
                 return;
             }
 
-
-            if (v>0) //&& _risingAttackCount < 3)            //ã¸UŒ‚
+            if (v > 0) //&& _risingAttackCount < 3)            //ã¸UŒ‚
             {
                 _closeAttack = true;
                 _pushdKey = PushdKey.RisingAttack;
@@ -413,136 +323,43 @@ public class AttackCloseController : MonoBehaviour
                 return;
             }
 
-            if (h != 0)            //‰¡UŒ‚
+            if (!_isGround && h!=0)       //‹ó’†ˆÚ“®UŒ‚
             {
-                _pushdKey = PushdKey.MoveX;
-                _downSpeed = false;
-                airTime = 0;
-
-                AttackdMove();
-                Effects();
-                return;
-            }
-
-            if (!_isGround && (h == 0))       //‹ó’†UŒ‚
-            {
-                Debug.Log("‰ñ”:" + _upMoveAttackCount);
-                _upMoveAttackCount++;
+                _closeAttack = true;
                 _pushdKey = PushdKey.UpMoveAttack;
-                AttackdMove();
-                Effects();
+                _nomalAttack.UpMoveAttack(h);
+                _nomalAttack.UpAttackEffect();
+                return;
+            }
+            if (h != 0)            //‰¡ˆÚ“®UŒ‚
+            {
+                _closeAttack = true;
+                _pushdKey = PushdKey.MoveX;
+                _nomalAttack.MoveAttack();
+                _nomalAttack.MoveAttackEffeck();
                 return;
             }
 
-            //if (!_isGround)                          //‹ó’†‚Å‚Ì’P”­”ÍˆÍUŒ‚
-            //{
-            //    _pushdKey = PushdKey.UpAttack;
-            //    AttackdMove();
-            //    Effects();
-            //    return;
-            //}
+            if (!_isGround)@//‹ó’†UŒ‚
+            {
+                _closeAttack = true;
+                _pushdKey = PushdKey.UpAttack;
+                _nomalAttack.UpAttack();
+                _nomalAttack.UpMoveAttackEffect();
+            }
+
 
 
             if (h == 0)  //‚»‚ÌêUŒ‚
             {
+                _closeAttack = true;
                 _pushdKey = PushdKey.NoMove;
                 _nomalAttack.NoMoveAttackEffeck();
+                _nomalAttack.NoMoveAttack();
             }
 
         }
     }
-
-    /// <summary>UŒ‚‚ÌŒü‚«‚ğ”»’è‚·‚éŠÖ”</summary>
-    void Direction()
-    {
-        if (_pushdKey == PushdKey.Target)
-        {
-            Vector3 muki;
-            if (targetSystem._targetEnemy.transform.position.x - transform.position.x > 0)
-            {
-                muki = new Vector3(1, transform.localScale.y, transform.localScale.z);
-                transform.localScale = muki;
-            }
-            else
-            {
-                muki = new Vector3(-1, transform.localScale.y, transform.localScale.z);
-                transform.localScale = muki;
-            }
-        }
-
-        if (_pushdKey == PushdKey.MoveX)
-        {
-            Vector3 muki;
-            if (_crosshairController.transform.position.x - transform.position.x > 0)
-            {
-                muki = new Vector3(1, transform.localScale.y, transform.localScale.z);
-                transform.localScale = muki;
-            }
-            else if (_crosshairController.transform.position.x - transform.position.x < 0)
-            {
-                muki = new Vector3(-1, transform.localScale.y, transform.localScale.z);
-                transform.localScale = muki;
-            }
-        }
-        if (_pushdKey == PushdKey.NoMove)
-        {
-            Vector3 muki;
-            if (_crosshairController.transform.position.x - transform.position.x > 0)
-            {
-                muki = new Vector3(1, transform.localScale.y, transform.localScale.z);
-                transform.localScale = muki;
-            }
-            else if (_crosshairController.transform.position.x - transform.position.x < 0)
-            {
-                muki = new Vector3(-1, transform.localScale.y, transform.localScale.z);
-                transform.localScale = muki;
-            }
-        }
-
-    }
-
-
-
-
-
-    void AttackdMove()
-    {
-        _closeAttack = true;
-        airTime = 0;
-        Direction();
-        if (_isGround == false && _pushdKey == PushdKey.UpMoveAttack)
-        {
-            _downSpeed = true;
-        }
-
-        if (_pushdKey == PushdKey.MoveX)
-        {
-            Vector3 velo = _crosshairController.transform.position - transform.position;
-            _rb.AddForce(velo.normalized * _attackMovedPower, ForceMode.Impulse);
-        }
-        if (_pushdKey == PushdKey.NoMove)
-        {
-            float ve = _crosshairController.transform.position.x - transform.position.x;
-            _rb.AddForce(ve * transform.right * _attackMovedPower, ForceMode.Impulse);
-
-        }
-       
-        if (_pushdKey == PushdKey.UpMoveAttack)
-        {
-            _rb.AddForce(_crosshairController.gameObject.transform.position.x * transform.right * _attackMovedPower, ForceMode.Impulse);
-        }
-        //if (_pushdKey == PushdKey.UpAttack)
-        //{
-        //    _rb.velocity = Vector3.zero;
-        //}
-
-
-    }
-
-
-
-
-
 
     void Effects()
     {
@@ -607,43 +424,7 @@ public class AttackCloseController : MonoBehaviour
         }
 
 
-        //////////////////////////////’nã‚Å‚ÌUŒ‚
-        if (_attackXCount == 0)
-        {
-            _attackXCount++;
-            _weaponAnim.Play("Zangeki1");                                       //Š™‚ÌƒAƒjƒ[ƒVƒ‡ƒ“
-            var effect = Instantiate(_zangekiEffects[0]);                       //ƒGƒbƒtƒFƒNƒg‚ğo‚·
-            effect.transform.position = _zangekiEffectsPosition[0].position;
-        }
-        else if (_attackXCount == 1)
-        {
-            _attackXCount++;
-            _weaponAnim.Play("Zangeki2");
-            var effect = Instantiate(_zangekiEffects[1]);
-            effect.transform.position = _zangekiEffectsPosition[1].position;
-        }
-        else if (_attackXCount == 2)
-        {
-            _attackXCount++;
-            _weaponAnim.Play("Zangeki3");
-            var effect = Instantiate(_zangekiEffects[2]);
-            effect.transform.position = _zangekiEffectsPosition[2].position;
 
-        }
-        else if (_attackXCount == 3)
-        {
-            _attackXCount++;
-            _weaponAnim.Play("Zangeki4");
-            var effect = Instantiate(_zangekiEffects[3]);
-            effect.transform.position = _zangekiEffectsPosition[3].position;
-        }
-        else if (_attackXCount == 4)
-        {
-            _weaponAnim.Play("Zangeki5");
-            var effect = Instantiate(_zangekiEffects[4]);
-            effect.transform.position = _zangekiEffectsPosition[4].position;
-            _attackXCount = 0;
-        }
 
     }
 

@@ -14,7 +14,7 @@ public class RisingAttack : MonoBehaviour
     [Tooltip("攻撃時の移動スピード")] [SerializeField] float _attackSpeed = 3;
 
 
-    [SerializeField] float _movedDistance = 5;
+    [SerializeField] float _movedDistance = 3;
 
 
 
@@ -39,15 +39,34 @@ public class RisingAttack : MonoBehaviour
         }
 
     }
+    IEnumerator ReleaseAttackStiffenss()
+    {
+        yield return new WaitForSeconds(2);
 
+        _attackCloseController._closeAttack = false;
+        _attackCloseController._isAttackNow = false;
+    }
     public void Attack()
     {
-        _nowPos = transform.position;
+        StartCoroutine(ReleaseAttackStiffenss());
         _risingAttackCount++;
+
+
+        Vector3 velo = _crosshairController.transform.position - transform.position;
+
+        if (velo.x > 0)
+        {
+            transform.localScale = new Vector3(1, 1, 1);
+        }
+        else if (velo.x < 0)
+        {
+            transform.localScale = new Vector3(-1, 1, 1);
+        }
+
         if (_risingAttackCount < 3)
         {
-            Vector3 velo = _crosshairController.transform.position - transform.position;
 
+            Debug.Log(velo.x);
             if (velo.y < 0)
             {
                 _rb.AddForce(transform.up * _attackSpeed, ForceMode.Impulse);
@@ -55,11 +74,11 @@ public class RisingAttack : MonoBehaviour
             else if (velo.x > 2)
             {
                 Vector3 pos = _rightPos.position - transform.position;
-                _rb.AddForce(pos.normalized*_attackSpeed, ForceMode.Impulse);
+                _rb.AddForce(pos.normalized * _attackSpeed, ForceMode.Impulse);
             }
             else if (velo.x < -2)
             {
-                Vector3 pos = _leftPos.position - transform.position;
+                Vector3 pos = _rightPos.position - transform.position;
                 _rb.AddForce(pos.normalized * _attackSpeed, ForceMode.Impulse);
             }
             else
@@ -67,16 +86,6 @@ public class RisingAttack : MonoBehaviour
                 Vector3 mousPos = new Vector3(velo.normalized.x, Mathf.Abs(velo.normalized.y), velo.normalized.z);
                 _rb.AddForce(mousPos * _attackSpeed, ForceMode.Impulse);
             }
-
-            if(velo.x>0)
-            {
-                transform.localScale = new Vector3(1, 1, 1);
-            }
-            else if (velo.x<0)
-            {
-                transform.localScale = new Vector3(-1, 1, 1);
-            }
-
         }
         else
         {
@@ -112,9 +121,9 @@ public class RisingAttack : MonoBehaviour
     public void MoveEnd()
     {
 
-        float distance = Vector3.Distance(_nowPos, transform.position);
+        float distance = Vector3.Distance(_attackCloseController._nowPos, transform.position);
 
-        if (distance > _movedDistance && _risingAttackCount < 3)
+        if (distance > _movedDistance)
         {
             _attackCloseController._closeAttack = false;
             _rb.velocity = Vector3.zero;
