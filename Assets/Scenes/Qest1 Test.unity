@@ -3471,7 +3471,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 195377453}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 3.53, z: -2.7999997}
+  m_LocalPosition: {x: 0, y: 3.73, z: -2.7999997}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -9049,7 +9049,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3570360474857398159, guid: c14350820649dac44a454b33ac8ebef4, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2
+      value: 2.2
       objectReference: {fileID: 0}
     - target: {fileID: 3570360474857398159, guid: c14350820649dac44a454b33ac8ebef4, type: 3}
       propertyPath: m_LocalPosition.z
@@ -15061,6 +15061,11 @@ Animator:
   m_CorrespondingSourceObject: {fileID: 2102569251, guid: c14350820649dac44a454b33ac8ebef4, type: 3}
   m_PrefabInstance: {fileID: 559009376}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &905876034 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2102569249, guid: c14350820649dac44a454b33ac8ebef4, type: 3}
+  m_PrefabInstance: {fileID: 559009376}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &913964483
 GameObject:
   m_ObjectHideFlags: 0
@@ -16209,7 +16214,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 969803333}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 3.53, z: -2.7999997}
+  m_LocalPosition: {x: 0, y: 3.73, z: -2.7999997}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -34795,6 +34800,7 @@ MonoBehaviour:
   _targetEnemyBeforCoolTime: 2
   _targetEnemyAfterCoolTime: 4
   _releaseEnemyCountLimit: 2
+  _moveDistance: 2
 --- !u!114 &2060599553
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -34810,7 +34816,7 @@ MonoBehaviour:
   _crosshairController: {fileID: 1101480568}
   _attackCloseController: {fileID: 2060599555}
   _attackSpeed: 20
-  _movedDistance: 5
+  _movedDistance: 3
   _rightPos: {fileID: 80188427}
   _leftPos: {fileID: 1990459608}
 --- !u!114 &2060599554
@@ -34844,7 +34850,7 @@ MonoBehaviour:
   _attackZanryou: 10
   _risingAttack: {fileID: 2060599553}
   _downAttack: {fileID: 2060599554}
-  _nomalAttack: {fileID: 0}
+  _nomalAttack: {fileID: 2060599556}
   _crosshairController: {fileID: 1101480568}
   targetSystem: {fileID: 1101480572}
   _enemyBox: {fileID: 914177793}
@@ -34874,6 +34880,7 @@ MonoBehaviour:
   _attackCoolTimeLimit: 3
   _attackContenueTimeLimit: 2
   _attackDownLate: 1
+  _nowPos: {x: 0, y: 0, z: 0}
   _attackCount: 0
   _isAttackNow: 0
   _closeAttack: 0
@@ -34887,6 +34894,44 @@ MonoBehaviour:
   _zSpeed: 0
   _isGround: 0
   _downSpeed: 0
+--- !u!114 &2060599556
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1214095196}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c96e4c6b7f619024497c9d95ee3f7a5a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _attackSpeed: 3
+  _attackUpSpeedNoMoe: 2
+  _attackUpSpeedMove: 30
+  _moveDis: 3
+  _upMoveDis: 5
+  _timeMove: 0.3
+  _timeNoMove: 0.5
+  _timeUpNoMove: 0.5
+  _timeUpMove: 2
+  _zangekiEffects:
+  - {fileID: 3905191903200188638, guid: 3a2fdadcc0b0a8647912aa13bc78cf9b, type: 3}
+  - {fileID: 635879514684205280, guid: cc5db6cc6a1ffd84eb1936fa6801c4ad, type: 3}
+  - {fileID: 572875856857591045, guid: 345387ec42fd1214a9e71f2bcc6b571f, type: 3}
+  - {fileID: 7596041705455213473, guid: 1077c09982891534dbc640e1f212a02a, type: 3}
+  - {fileID: 8349014987137579907, guid: 2d21f148141470e4598e484fe33cff30, type: 3}
+  _zangekiEffectsPosition:
+  - {fileID: 1456437744}
+  - {fileID: 359713096}
+  - {fileID: 829062257}
+  - {fileID: 1925488171}
+  - {fileID: 1925488171}
+  _downAttackEffect: {fileID: 0}
+  _zangekiEffectPosition: {fileID: 905876034}
+  _weaponAnim: {fileID: 905876031}
+  _crosshairController: {fileID: 1101480568}
+  _attackCloseController: {fileID: 2060599555}
 --- !u!4 &2062293688 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3321800323751915524, guid: 8449cb380c0725e4f85a62ec801ef5f2, type: 3}
