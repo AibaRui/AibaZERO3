@@ -28,7 +28,7 @@ public class DownAttack : MonoBehaviour
     }
     void Update()
     {
-        if (_attackCloseController._closeAttack)
+        if (_attackCloseController._closeAttack&&_attackCloseController._pushdKey==AttackCloseController.PushdKey.DownAttack)
         {
             Effect();
         }
@@ -49,7 +49,7 @@ public class DownAttack : MonoBehaviour
         if (_isDownNow && _isGround)
         {
             _attackCloseController._closeAttack = false;
-            _attackCloseController.okAttack = false;
+            _attackCloseController._isAttackNow = false;
             var effect = Instantiate(_downAttackEffect); //エフェクトを出す
             effect.transform.position = transform.position;
             _isDownNow = false;
@@ -78,6 +78,7 @@ public class DownAttack : MonoBehaviour
                 effect.transform.position = transform.position;
                 _isDownNow = false;
                 _attackCloseController._closeAttack = false;
+                _attackCloseController._isAttackNow = false;
             }
         }
 

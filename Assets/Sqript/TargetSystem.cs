@@ -54,8 +54,8 @@ public class TargetSystem : MonoBehaviour
         //    }
 
 
-        if (!_attackClose._isAttackNow)
-        {
+        //if (!_attackClose._isAttackNow)
+        //{
 
             if (Input.GetMouseButtonDown(2))
             {
@@ -90,7 +90,7 @@ public class TargetSystem : MonoBehaviour
                     }
 
 
-                }
+              //  }
             }
 
         }

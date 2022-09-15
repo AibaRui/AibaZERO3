@@ -62,7 +62,7 @@ public class AttackCloseController : MonoBehaviour
 
 
     /// <summary>UŒ‚‚Ìí—Ş‚ğ”»’è</summary>
-    PushdKey _pushdKey = PushdKey.NoMove;
+  public  PushdKey _pushdKey = PushdKey.NoMove;
 
     /// <summary>UŒ‚ŠJn‚ÌêŠ</summary>
     public Vector3 _nowPos;
@@ -439,7 +439,7 @@ public class AttackCloseController : MonoBehaviour
         if (airTime > airTimeLimit)
         {
             _rb.useGravity = true;
-            _closeAttack = false;
+         //   _closeAttack = false;
             _downSpeed = false;
             airTime = 0;
         }

@@ -33,7 +33,7 @@ public class RisingAttack : MonoBehaviour
     }
     void Update()
     {
-        if (_attackCloseController._closeAttack)
+        if (_attackCloseController._closeAttack && _attackCloseController._pushdKey == AttackCloseController.PushdKey.RisingAttack)
         {
             MoveEnd();
         }
@@ -48,6 +48,7 @@ public class RisingAttack : MonoBehaviour
     }
     public void Attack()
     {
+        _nowPos = transform.position;
         StartCoroutine(ReleaseAttackStiffenss());
         _risingAttackCount++;
 
@@ -120,17 +121,21 @@ public class RisingAttack : MonoBehaviour
 
     public void MoveEnd()
     {
+        
 
-        float distance = Vector3.Distance(_attackCloseController._nowPos, transform.position);
+        float distance = Vector2.Distance(_nowPos, this.transform.position);
+
 
         if (distance > _movedDistance)
         {
+            Debug.Log("Patarn22");
             _attackCloseController._closeAttack = false;
             _rb.velocity = Vector3.zero;
             _attackCloseController._downSpeed = true;
         }
         else if (_risingAttackCount > 3)
         {
+            Debug.Log("Patarn33");
             //_rb.velocity = Vector3.zero;
         }
 

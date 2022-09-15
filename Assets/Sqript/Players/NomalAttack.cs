@@ -92,7 +92,7 @@ public class NomalAttack : MonoBehaviour
         {
             float distance = Vector3.Distance(_attackCloseController._nowPos, transform.position);
 
-            if (_pushdKey == PushdKey.UpAttack)
+            if (_pushdKey == PushdKey.UpAttack && _attackCloseController._pushdKey == AttackCloseController.PushdKey.UpAttack)
             {
                 _attackCloseController._closeAttack = false;
                 _rb.velocity = Vector3.zero;
@@ -100,7 +100,7 @@ public class NomalAttack : MonoBehaviour
             }
 
 
-            if (_pushdKey == PushdKey.UpMoveAttack)
+            if (_pushdKey == PushdKey.UpMoveAttack && _attackCloseController._pushdKey == AttackCloseController.PushdKey.UpMoveAttack)
             {
                 if (distance > _upMoveDis)
                 {
@@ -109,7 +109,7 @@ public class NomalAttack : MonoBehaviour
                 }
             }
 
-            if (_pushdKey == PushdKey.MoveX)
+            if (_pushdKey == PushdKey.MoveX && _attackCloseController._pushdKey == AttackCloseController.PushdKey.MoveX)
             {
                 if (distance > 4)
                 {
@@ -119,7 +119,7 @@ public class NomalAttack : MonoBehaviour
                 }
             }
 
-            if (_pushdKey == PushdKey.NoMove)
+            if (_pushdKey == PushdKey.NoMove && _attackCloseController._pushdKey == AttackCloseController.PushdKey.NoMove)
             {
                 if (distance > _moveDis)
                 {

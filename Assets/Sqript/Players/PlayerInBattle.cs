@@ -35,11 +35,12 @@ public class PlayerInBattle : MonoBehaviour
         if (!_pauseManager._isPause)
         {
             Anim();
-            Jump();
+
             if (!_kaihi._isDodges || !_kaihi._isDodging)
             {
                 if (!_attackCloseController._closeAttack)
                 {
+                    Jump();
                     Move();
                 }
             }
