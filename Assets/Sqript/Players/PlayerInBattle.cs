@@ -22,6 +22,8 @@ public class PlayerInBattle : MonoBehaviour
     Vector3 _velocity;
 
 
+
+    public PlayerAction _playerAction = PlayerAction.Nomal;
     void Start()
     {
         _rb = GetComponent<Rigidbody>();
@@ -36,12 +38,13 @@ public class PlayerInBattle : MonoBehaviour
         {
             Anim();
 
-            if (!_kaihi._isDodges || !_kaihi._isDodging)
+            if (_playerAction == PlayerAction.Nomal)
             {
-                if (!_attackCloseController._closeAttack)
+                if (!_kaihi._isDodges || !_kaihi._isDodging)
                 {
-                    Jump();
-                    Move();
+                        Jump();
+                        Move();
+                    
                 }
             }
         }
@@ -197,4 +200,18 @@ public class PlayerInBattle : MonoBehaviour
 
         _anim.enabled = true;
     }
+
+
+
+
+    public enum PlayerAction
+    {
+        /// <summary>í èÌèÛë‘</summary>
+        Nomal,
+        /// <summary>çUåÇíÜÅAà⁄ìÆïsâ¬</summary>
+        Attack,
+
+
+    }
+
 }

@@ -12,9 +12,7 @@ public class AttackColliderWeapon : MonoBehaviour
     IEnumerator NomalAttack()
     {
         _collider.SetActive(true);
-        Debug.Log("11");
         yield return new WaitForSeconds(1f);
-        Debug.Log("22");
         _collider.SetActive(false);
     }
 

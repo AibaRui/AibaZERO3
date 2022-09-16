@@ -62,7 +62,7 @@ public class AttackCloseController : MonoBehaviour
 
 
     /// <summary>UŒ‚‚Ìí—Ş‚ğ”»’è</summary>
-  public  PushdKey _pushdKey = PushdKey.NoMove;
+    public PushdKey _pushdKey = PushdKey.NoMove;
 
     /// <summary>UŒ‚ŠJn‚ÌêŠ</summary>
     public Vector3 _nowPos;
@@ -94,6 +94,7 @@ public class AttackCloseController : MonoBehaviour
     bool _isDownAttack = false;
 
 
+    bool _isRisingAttack = false;
 
     /// <summary>UŒ‚‰Â”\‚©‚Ç‚¤‚©‚Ì”»’è</summary>
     public bool okAttack = false;
@@ -126,6 +127,7 @@ public class AttackCloseController : MonoBehaviour
     Animator _anim;
     Rigidbody _rb;
 
+    [SerializeField] PlayerInBattle _playerInBattle;
     private void Awake()
     {
         _pauseManager = GameObject.FindObjectOfType<PauseManager>();
@@ -140,6 +142,7 @@ public class AttackCloseController : MonoBehaviour
 
     void Update()
     {
+        Debug.Log(_isAttackNow);
         if (!_pauseManager._isPause)
         {
             ///////////////////////UŒ‚”»’èêŠ‚ÌˆÚ“®/////////
@@ -227,13 +230,7 @@ public class AttackCloseController : MonoBehaviour
         {
             yield return new WaitForSeconds(_attackDownLate);
         }
-        else if (_pushdKey == PushdKey.RisingAttack)
-        {
-            yield return new WaitForSeconds(_attackLate);
-        }
-       
-
-      //  _isAttackNow = false;
+        //  _isAttackNow = false;
         if (_enemyBox.transform.childCount != 0)
         {
             //_enemyBox.transform.DetachChildren();
@@ -281,11 +278,12 @@ public class AttackCloseController : MonoBehaviour
 
     void Attack()
     {
-        float h = Input.GetAxis("Horizontal");
-        float v = Input.GetAxis("Vertical");
-
         if (Input.GetMouseButtonDown(0))
         {
+            _downSpeed = false;
+            float h = Input.GetAxis("Horizontal");
+            float v = Input.GetAxis("Vertical");
+
             Debug.Log("ƒL[:" + _isUpAttack);
 
             StartCoroutine(ReleaseAttackStiffenss());
@@ -303,6 +301,24 @@ public class AttackCloseController : MonoBehaviour
                 return;
             }
 
+
+            if ((v > 0) && !_isRisingAttack)            //ã¸UŒ‚
+            {
+                airTime = 0;
+                _attackCount++;
+                _isRisingAttack = true;
+                _closeAttack = true;
+                _pushdKey = PushdKey.RisingAttack;
+                _risingAttack.Attack();
+                _risingAttack.Effect();
+                return;
+            }else if((v > 0) && _isRisingAttack)
+            {
+                _closeAttack = true;
+                _pushdKey = PushdKey.RisingAttack;
+              StartCoroutine(_risingAttack.NoRisingEffect());
+                return;
+            }
             _attackCount++;
 
 
@@ -314,16 +330,9 @@ public class AttackCloseController : MonoBehaviour
                 return;
             }
 
-            if (v > 0) //&& _risingAttackCount < 3)            //ã¸UŒ‚
-            {
-                _closeAttack = true;
-                _pushdKey = PushdKey.RisingAttack;
-                _risingAttack.Attack();
-                _risingAttack.Effect();
-                return;
-            }
 
-            if (!_isGround && h!=0)       //‹ó’†ˆÚ“®UŒ‚
+
+            if (!_isGround && h != 0)       //‹ó’†ˆÚ“®UŒ‚
             {
                 _closeAttack = true;
                 _pushdKey = PushdKey.UpMoveAttack;
@@ -333,6 +342,7 @@ public class AttackCloseController : MonoBehaviour
             }
             if (h != 0)            //‰¡ˆÚ“®UŒ‚
             {
+                airTime = 0;
                 _closeAttack = true;
                 _pushdKey = PushdKey.MoveX;
                 _nomalAttack.MoveAttack();
@@ -342,6 +352,7 @@ public class AttackCloseController : MonoBehaviour
 
             if (!_isGround)@//‹ó’†UŒ‚
             {
+                Debug.Log("aaa");
                 _closeAttack = true;
                 _pushdKey = PushdKey.UpAttack;
                 _nomalAttack.UpAttack();
@@ -439,9 +450,10 @@ public class AttackCloseController : MonoBehaviour
         if (airTime > airTimeLimit)
         {
             _rb.useGravity = true;
-         //   _closeAttack = false;
+            // _closeAttack = false;
             _downSpeed = false;
             airTime = 0;
+            _playerInBattle._playerAction = PlayerInBattle.PlayerAction.Nomal;
         }
 
     }
@@ -458,8 +470,10 @@ public class AttackCloseController : MonoBehaviour
             _isGround = true;
             _downSpeed = false;
             airTime = 0;
+            _rb.isKinematic = false;
+            _playerInBattle._playerAction = PlayerInBattle.PlayerAction.Nomal;
 
-
+            _isRisingAttack = false;
             //if (_upMoveAttackCount > 0)        //‹ó’†UŒ‚‚ğ‚â‚ß‚Ä’n–Ê‚É‚Â‚¢‚½‚çAUŒ‚ƒRƒ“ƒ{‚ğ’†~
             //{
             //    Debug.Log("dalseup");

@@ -17,7 +17,8 @@ public class NomalAttack : MonoBehaviour
     [Tooltip("横移動の距離")] [SerializeField] float _moveDis = 3;
 
     [Header("空中横移動の距離")]
-    [Tooltip("空中横移動の距離")] [SerializeField] float _upMoveDis = 5;
+    [Tooltip("空中横移動の距離")] [SerializeField] float _upMoveDis = 4;
+
 
 
     [SerializeField] float _timeMove = 0.3f;
@@ -37,13 +38,23 @@ public class NomalAttack : MonoBehaviour
     [Header("必要なオブジェクト")]
     ///<summary>クロスヘアーのスクリプト</summary>
     [SerializeField] GameObject _crosshairController;
-
-
     [SerializeField] AttackCloseController _attackCloseController;
+    [SerializeField] PlayerInBattle _playerInBattle;
+
+
 
     PushdKey _pushdKey = PushdKey.NoMove;
 
+    int _upAttackCount = 0;
     int _noMoveAttackCount = 0;
+
+    /// <summary>空中攻撃のコンボ継続を確認する</summary>
+    bool _countUpAttackChain=false;
+    /// <summary>空中攻撃のコンボ継続時間をカウントする</summary>
+    float _countUpAttackChainCount = 0;
+    /// <summary>空中攻撃のコンボ継続可能時間をカウントする</summary>
+    [SerializeField] float _countUpAttackChainCountLimit = 2;
+
     Rigidbody _rb;
     void Start()
     {
@@ -55,6 +66,8 @@ public class NomalAttack : MonoBehaviour
     void Update()
     {
         MovedEnd();
+
+        CountChain();
     }
     /// <summary>攻撃の硬直解除</summary>
     IEnumerator ReleaseAttackStiffenss()
@@ -79,13 +92,18 @@ public class NomalAttack : MonoBehaviour
             yield return new WaitForSeconds(_timeUpMove);
         }
 
+        _playerInBattle._playerAction = PlayerInBattle.PlayerAction.Nomal;
         _attackCloseController._closeAttack = false;
         _attackCloseController._isAttackNow = false;
+        _attackCloseController._downSpeed = false;
         //if (_enemyBox.transform.childCount != 0)
         //{
         //    //_enemyBox.transform.DetachChildren();
         //}
     }
+
+
+
     void MovedEnd()
     {
         if (_attackCloseController._closeAttack)
@@ -96,7 +114,8 @@ public class NomalAttack : MonoBehaviour
             {
                 _attackCloseController._closeAttack = false;
                 _rb.velocity = Vector3.zero;
-
+                _countUpAttackChain = true;
+                _playerInBattle._playerAction = PlayerInBattle.PlayerAction.Nomal;
             }
 
 
@@ -106,6 +125,7 @@ public class NomalAttack : MonoBehaviour
                 {
                     _attackCloseController._closeAttack = false;
                     _rb.velocity = Vector3.zero;
+                    _playerInBattle._playerAction = PlayerInBattle.PlayerAction.Nomal;
                 }
             }
 
@@ -116,6 +136,7 @@ public class NomalAttack : MonoBehaviour
                     _attackCloseController._closeAttack = false;
                     Debug.Log("ffx");
                     _rb.velocity = Vector3.zero;
+                    _playerInBattle._playerAction = PlayerInBattle.PlayerAction.Nomal;
                 }
             }
 
@@ -125,6 +146,7 @@ public class NomalAttack : MonoBehaviour
                 {
                     _rb.velocity = Vector3.zero;
                     _attackCloseController._closeAttack = false;
+                    _playerInBattle._playerAction = PlayerInBattle.PlayerAction.Nomal;
                 }
             }
         }
@@ -133,6 +155,7 @@ public class NomalAttack : MonoBehaviour
 
     public void MoveAttack()
     {
+        _playerInBattle._playerAction = PlayerInBattle.PlayerAction.Attack;
         _pushdKey = PushdKey.MoveX;
         StartCoroutine(ReleaseAttackStiffenss());
         _attackCloseController._downSpeed = false;
@@ -149,19 +172,22 @@ public class NomalAttack : MonoBehaviour
 
     public void UpAttack()
     {
-
+        _playerInBattle._playerAction = PlayerInBattle.PlayerAction.Attack;
+        _attackCloseController._downSpeed = true;
         _pushdKey = PushdKey.UpAttack;
         StartCoroutine(ReleaseAttackStiffenss());
-        Vector3 velo = _crosshairController.transform.position - transform.position;
-        _rb.AddForce(velo.normalized * _attackUpSpeedNoMoe, ForceMode.Impulse);
+        _rb.velocity = Vector3.zero;
     }
     public void UpAttackEffect()
     {
-
+        _upAttackCount++;
+        _countUpAttackChainCount = 0;
+        _countUpAttackChain = false;
 
     }
     public void UpMoveAttack(float h)
     {
+        _playerInBattle._playerAction = PlayerInBattle.PlayerAction.Attack;
         _pushdKey = PushdKey.UpMoveAttack;
         StartCoroutine(ReleaseAttackStiffenss());
         Debug.Log("XXX");
@@ -184,9 +210,13 @@ public class NomalAttack : MonoBehaviour
 
     }
 
+
+
+
+
     public void NoMoveAttack()
     {
-
+        _playerInBattle._playerAction = PlayerInBattle.PlayerAction.Attack;
         _pushdKey = PushdKey.NoMove;
         StartCoroutine(ReleaseAttackStiffenss());
     }
@@ -259,5 +289,28 @@ public class NomalAttack : MonoBehaviour
 
 
     }
+
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.tag=="Ground")
+        {
+            _upAttackCount = 0;
+        }
+    }
+
+    void CountChain()
+    {
+        if (_countUpAttackChain)
+        {
+            _countUpAttackChainCount += Time.deltaTime;
+            if (_countUpAttackChainCount >= _countUpAttackChainCountLimit)
+            {
+                _upAttackCount = 0;
+
+            }
+        }
+    }
+
 
 }
