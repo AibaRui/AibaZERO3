@@ -1525,7 +1525,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2060599533}
-  m_RootOrder: 9
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &82160088
 GameObject:
@@ -9041,7 +9041,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3570360474857398159, guid: c14350820649dac44a454b33ac8ebef4, type: 3}
       propertyPath: m_RootOrder
-      value: 49
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 3570360474857398159, guid: c14350820649dac44a454b33ac8ebef4, type: 3}
       propertyPath: m_LocalPosition.x
@@ -11563,7 +11563,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 52
+  m_RootOrder: 53
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &729704549
 GameObject:
@@ -21712,7 +21712,7 @@ Transform:
   m_Children:
   - {fileID: 1246077814}
   m_Father: {fileID: 0}
-  m_RootOrder: 50
+  m_RootOrder: 51
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &1298921434
 BoxCollider:
@@ -22013,7 +22013,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!54 &1306426989
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -22106,7 +22106,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 51
+  m_RootOrder: 52
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &1306426994
 Animator:
@@ -23627,7 +23627,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1378389293
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23711,12 +23711,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1378389292}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 9.4800005, y: -0.3369999, z: -1.7}
+  m_LocalPosition: {x: -7.83, y: 1.8630002, z: -0.05000007}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2060599533}
-  m_RootOrder: 8
+  m_Father: {fileID: 0}
+  m_RootOrder: 49
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1380592076
 GameObject:
@@ -32931,7 +32931,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2060599533}
-  m_RootOrder: 10
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1991625228
 GameObject:
@@ -34905,7 +34905,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _crosshairController: {fileID: 1101480568}
-  targetSystem: {fileID: 1101480572}
+  _targetSystem: {fileID: 0}
   _enemyBox: {fileID: 914177793}
   _attackCloseController: {fileID: 2060599555}
   _attractPos: {fileID: 2039365419}
@@ -34933,6 +34933,7 @@ MonoBehaviour:
   _movedDistance: 4
   _rightPos: {fileID: 80188427}
   _leftPos: {fileID: 1990459608}
+  _playerInBattle: {fileID: 2060599557}
 --- !u!114 &2060599554
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -35009,6 +35010,7 @@ MonoBehaviour:
   _zSpeed: 0
   _isGround: 0
   _downSpeed: 0
+  _playerInBattle: {fileID: 2060599557}
 --- !u!114 &2060599556
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -35047,6 +35049,19 @@ MonoBehaviour:
   _weaponAnim: {fileID: 905876031}
   _crosshairController: {fileID: 1101480568}
   _attackCloseController: {fileID: 2060599555}
+  _playerInBattle: {fileID: 2060599557}
+  _countUpAttackChainCountLimit: 2
+--- !u!114 &2060599557 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2060599556, guid: c14350820649dac44a454b33ac8ebef4, type: 3}
+  m_PrefabInstance: {fileID: 559009376}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1214095196}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12ac581bc77dde942a7906566831cccb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &2062293688 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3321800323751915524, guid: 8449cb380c0725e4f85a62ec801ef5f2, type: 3}

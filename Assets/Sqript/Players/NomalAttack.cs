@@ -95,7 +95,6 @@ public class NomalAttack : MonoBehaviour
         _playerInBattle._playerAction = PlayerInBattle.PlayerAction.Nomal;
         _attackCloseController._closeAttack = false;
         _attackCloseController._isAttackNow = false;
-        _attackCloseController._downSpeed = false;
         //if (_enemyBox.transform.childCount != 0)
         //{
         //    //_enemyBox.transform.DetachChildren();
@@ -307,7 +306,7 @@ public class NomalAttack : MonoBehaviour
             if (_countUpAttackChainCount >= _countUpAttackChainCountLimit)
             {
                 _upAttackCount = 0;
-
+                _attackCloseController._downSpeed = false;
             }
         }
     }

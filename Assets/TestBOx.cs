@@ -40,7 +40,6 @@ public class TestBOx : MonoBehaviour
     private void Awake()
     {
         _pauseManager = GameObject.FindObjectOfType<PauseManager>();
-
         _justKaihiManager = GameObject.FindObjectOfType<JustKaihiManager>();
     }
 

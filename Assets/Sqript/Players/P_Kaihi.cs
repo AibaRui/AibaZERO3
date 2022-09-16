@@ -77,12 +77,10 @@ public class P_Kaihi : MonoBehaviour
 
                     if (transform.localScale.x == 1)
                     {
-                        Debug.Log("11");
                         _kaihiEffect.transform.localScale = new Vector3(-1, 1, 1);
                     }
                     else
                     {
-                        Debug.Log("22");
                         _kaihiEffect.transform.localScale = new Vector3(1, 1, 1);
                     }
                     var _effectInstance = Instantiate(_kaihiEffect);

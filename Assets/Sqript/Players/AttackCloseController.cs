@@ -142,7 +142,6 @@ public class AttackCloseController : MonoBehaviour
 
     void Update()
     {
-        Debug.Log(_isAttackNow);
         if (!_pauseManager._isPause)
         {
             ///////////////////////UŒ‚”»’èêŠ‚ÌˆÚ“®/////////
