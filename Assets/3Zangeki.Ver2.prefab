@@ -12,9 +12,10 @@ GameObject:
   - component: {fileID: 3307652140963526756}
   - component: {fileID: 2352294831790400970}
   - component: {fileID: 3137198926613659392}
+  - component: {fileID: 2742481620500847494}
   m_Layer: 0
   m_Name: 3Zangeki.Ver2
-  m_TagString: Untagged
+  m_TagString: P_Attack
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -120,6 +121,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _lifetimeCountLimit: 0.8
+--- !u!65 &2742481620500847494
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 572875856857591045}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 3.3333333, y: 3.3333333, z: 2.77}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &5952583886591871213
 GameObject:
   m_ObjectHideFlags: 0

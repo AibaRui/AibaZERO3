@@ -4,8 +4,11 @@ using UnityEngine;
 
 public class EnemyMoves : MonoBehaviour
 {
-    [SerializeField] float _moveSpeed = 3;
 
+    [SerializeField] int _hp;
+    [SerializeField] float _moveSpeed = 3;
+    [SerializeField] float _attackCoolTime = 3;
+    [SerializeField] GameObject _longAttackEffect;
 
     /// <summary>trueだったら思考</summary>
     bool _thinkNow = false;
@@ -69,13 +72,27 @@ public class EnemyMoves : MonoBehaviour
                 Attack();
                 break;
 
+            case EnemyAction.Stop:
+                Stop();
+                break;
+
+            case EnemyAction.LongAttack:
+                LongAttck();
+                break;
+
+            case EnemyAction.Back:
+                Back();
+                break;
+
+
+
         }
     }
 
     void SetAi()
     {
         //タイマーを回してる間は思考させない
-        if (!_thinkNow)
+        if (!_thinkNow || _isActionNow)
         {
             return;
         }
@@ -86,29 +103,52 @@ public class EnemyMoves : MonoBehaviour
 
     void MainRoutine()
     {
-        Debug.Log("Think");
+        //Debug.Log("Think");
 
         float dir = Vector2.Distance(_player.transform.position, transform.position);
 
-        if (dir< 20)
+
+
+        if (dir < 5)
         {
-            _enemyAction = EnemyAction.Wait;
+            var r = Random.Range(0, 4);
+            if (r == 0)
+            {
+                _enemyAction = EnemyAction.Attack;
+            }
+            else if (r == 1)
+            {
+                _enemyAction = EnemyAction.Stop;
+            }
+            else if (r == 2)
+            {
+                _enemyAction = EnemyAction.LongAttack;
+            }
+            else
+            {
+                _enemyAction = EnemyAction.Back;
+            }
+            return;
         }
 
-        if (dir< 10)
-        {
-            _enemyAction = EnemyAction.Move;
-        }
-
-        if (dir< 6)
+        if (dir < 10)
         {
             _enemyAction = EnemyAction.Follow;
+            return;
+        }
+        if (dir < 15)
+        {
+            _enemyAction = EnemyAction.Move;
+            return;
         }
 
-        if (dir< 3)
+
+        if (dir < 20)
         {
-            _enemyAction = EnemyAction.Attack;
+            _enemyAction = EnemyAction.Wait;
+            return;
         }
+
     }
 
     IEnumerator AiTimer()
@@ -120,17 +160,91 @@ public class EnemyMoves : MonoBehaviour
 
     void Wait()
     {
-        Debug.Log("wait");
+        //  Debug.Log("wait");
     }
+
+    void Damaged()
+    {       
+        _isActionNow = true;
+        float h = GameObject.FindGameObjectWithTag("Player").transform.position.x - transform.position.x;
+        _rb.velocity = Vector3.zero;
+        if(h>0)
+        {
+            _rb.AddForce(transform.right * 3, ForceMode.Impulse);
+        }
+        else
+        {
+            _rb.AddForce(-1*transform.right * 3, ForceMode.Impulse);
+        }
+
+        StartCoroutine(Damagedd());
+    }
+    IEnumerator Damagedd()
+    {
+        _hp--;
+        Debug.Log(_hp);
+        if(_hp<=0)
+        {
+            Destroy(gameObject);
+            yield break;
+        }
+        yield return new WaitForSeconds(1);
+        _isActionNow = false;
+    }
+
+
+    void Stop()
+    {
+        if (_isActionNow)
+        {
+            return;
+        }
+        _isActionNow = true;
+        StartCoroutine(Stopa());
+    }
+    IEnumerator Stopa()
+    {
+        yield return new WaitForSeconds(2);
+        _isActionNow = false;
+    }
+
+    void Back()
+    {
+        var player = GameObject.FindGameObjectWithTag("Player");
+        if (player)
+        {
+            Vector2 v = player.transform.position - transform.position;
+
+            _rb.velocity = new Vector3(-2 * v.normalized.x, _rb.velocity.y, 0);
+        }
+
+        if (_isActionNow)
+        {
+            return;
+        }
+        _isActionNow = true;
+        StartCoroutine(Backs());
+    }
+    IEnumerator Backs()
+    {
+        yield return new WaitForSeconds(2);
+
+        if (_enemyAction == EnemyAction.Damaged)
+        {
+            yield break;
+        }
+        _isActionNow = false;
+    }
+
 
     void Move()
     {
-        Debug.Log("move");
+        // Debug.Log("move");
     }
 
     void Follow()
     {
-        Debug.Log("Follow");
+        // Debug.Log("Follow");
         Vector2 dir = _player.transform.position - transform.position;
 
         _rb.velocity = new Vector2(dir.normalized.x * 3, _rb.velocity.y);
@@ -139,26 +253,69 @@ public class EnemyMoves : MonoBehaviour
 
     void Attack()
     {
-        if(_isActionNow)
+        if (_isActionNow)
         {
             return;
         }
         _isActionNow = true;
-        _weaponAnim.Play("ArrmerEnemyWeaponAttackClose");
 
-        Debug.Log("Attack");
+        // Debug.Log("Attack");
         StartCoroutine(a());
 
     }
 
     IEnumerator a()
     {
-        _enemyAction = EnemyAction.Next;
-        yield return new WaitForSeconds(2f);
+        //_anim.Play("Attack");
+        yield return new WaitForSeconds(0.5f);
+        if (_enemyAction == EnemyAction.Damaged)
+        {
+            yield break;
+        }
+        _weaponAnim.Play("ArrmerEnemyWeaponAttackClose");
+       //_enemyAction = EnemyAction.Next;
+        yield return new WaitForSeconds(1.1f + _attackCoolTime);
+        if (_enemyAction == EnemyAction.Damaged)
+        {
+            yield break;
+        }
         _isActionNow = false;
     }
 
+    void LongAttck()
+    {
+        if (_isActionNow)
+        {
+            return;
+        }
+        _isActionNow = true;
+        StartCoroutine(b());
 
+    }
+
+    IEnumerator b()
+    {
+        _weaponAnim.Play("ArmerEnemyWeaponFar1");
+        yield return new WaitForSeconds(0.5f);
+        if (_enemyAction == EnemyAction.Damaged)
+        {
+            yield break;
+        }
+        var player = GameObject.FindGameObjectWithTag("Player");
+        if (player)
+        {
+            var go = Instantiate(_longAttackEffect);
+            go.transform.position = player.transform.position + new Vector3(0, 1, -1.5f);
+        }
+
+        yield return new WaitForSeconds(1.1f);
+        if (_enemyAction == EnemyAction.Damaged)
+        {
+            yield break;
+        }
+        yield return new WaitForSeconds(_attackCoolTime);
+        _isActionNow = false;
+    }
 
     public enum EnemyAction
     {
@@ -168,13 +325,23 @@ public class EnemyMoves : MonoBehaviour
         Follow,
         Attack,
         Evation,
+        Stop,
+        LongAttack,
+        Back,
+        Damaged,
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.tag=="P_Attack")
+        if (other.gameObject.tag == "P_Attack")
         {
-            Destroy(gameObject);
+            _enemyAction = EnemyAction.Damaged;
+            Damaged();
+        }
+
+        if(other.gameObject.tag =="RaisingAttack")
+        {
+
         }
     }
 
@@ -216,9 +383,9 @@ public class EnemyMoves : MonoBehaviour
     public void PauseJustKaihi()
     {
         // 速度・回転を保存し、Rigidbody を停止する
-     //   _angularVelocity = _rb.angularVelocity;
+        //   _angularVelocity = _rb.angularVelocity;
         _velocity = _rb.velocity;
-        _rb.velocity = new Vector3(_rb.velocity.x / 10, _rb.velocity.y / 10,0);
+        _rb.velocity = new Vector3(_rb.velocity.x / 10, _rb.velocity.y / 10, 0);
         _anim.speed = 0.3f;
         time = 10;
     }
@@ -227,7 +394,7 @@ public class EnemyMoves : MonoBehaviour
     {
         // Rigidbody の活動を再開し、保存しておいた速度・回転を戻す
         _rb.WakeUp();
-       // _rb.angularVelocity = _angularVelocity;
+        // _rb.angularVelocity = _angularVelocity;
         _rb.velocity = _velocity;
         _anim.speed = 1;
         time = 1;
@@ -249,7 +416,7 @@ public class EnemyMoves : MonoBehaviour
     public void Pause()
     {
         // 速度・回転を保存し、Rigidbody を停止する
-     //   _angularVelocity = _rb.angularVelocity;
+        //   _angularVelocity = _rb.angularVelocity;
         _velocity = _rb.velocity;
         _rb.Sleep();
         _rb.isKinematic = true;
@@ -260,7 +427,7 @@ public class EnemyMoves : MonoBehaviour
     {
         // Rigidbody の活動を再開し、保存しておいた速度・回転を戻す
         _rb.WakeUp();
-     //   _rb.angularVelocity = _angularVelocity;
+        //   _rb.angularVelocity = _angularVelocity;
         _rb.velocity = _velocity;
         _rb.isKinematic = false;
 
