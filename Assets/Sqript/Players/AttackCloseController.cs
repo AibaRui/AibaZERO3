@@ -295,9 +295,18 @@ public class AttackCloseController : MonoBehaviour
 
             if (targetSystem._targetEnemy != null)
             {
-                _pushdKey = PushdKey.Target;
-                _targetCloseAttack.Attack();
-                return;
+                if (_targetCloseAttack._isOkTargetAttack)
+                {
+                    _pushdKey = PushdKey.Target;
+                    _targetCloseAttack.Attack();
+                    return;
+                }
+                else
+                {
+                    _isAttackNow = false;
+                    return;
+                }
+
             }
 
 
@@ -311,11 +320,12 @@ public class AttackCloseController : MonoBehaviour
                 _risingAttack.Attack();
                 _risingAttack.Effect();
                 return;
-            }else if((v > 0) && _isRisingAttack)
+            }
+            else if ((v > 0) && _isRisingAttack)
             {
                 _closeAttack = true;
                 _pushdKey = PushdKey.RisingAttack;
-              StartCoroutine(_risingAttack.NoRisingEffect());
+                StartCoroutine(_risingAttack.NoRisingEffect());
                 return;
             }
             _attackCount++;

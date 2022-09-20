@@ -10,7 +10,7 @@ public class EnemyMoves : MonoBehaviour
     [SerializeField] float _attackCoolTime = 3;
     [SerializeField] GameObject _longAttackEffect;
     [SerializeField] GameObject _weapon;
-
+    [SerializeField] GameObject _deathBody;
 
 
 
@@ -21,7 +21,7 @@ public class EnemyMoves : MonoBehaviour
     bool _isActionNow = false;
 
     /// <summary>ターゲット攻撃を喰らってるかどうか</summary>
-    bool _isDamagedTargetAttack = false;
+  public  bool _isDamagedTargetAttack = false;
 
     int _countDamagedTargetAttack = 0;
 
@@ -203,6 +203,8 @@ public class EnemyMoves : MonoBehaviour
         Debug.Log(_hp);
         if (_hp <= 0)
         {
+            var go = Instantiate(_deathBody);
+            go.transform.position = transform.position;
             Destroy(gameObject);
             yield break;
         }
@@ -347,7 +349,7 @@ public class EnemyMoves : MonoBehaviour
     IEnumerator TargetAttackDamagedC()
     {
         _countDamagedTargetAttack = 0;
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(2);
         _isActionNow = false;
         _isDamagedTargetAttack = false;
     }
@@ -381,7 +383,7 @@ public class EnemyMoves : MonoBehaviour
 
         }
 
-        if(other.gameObject.tag=="")
+        if(other.gameObject.tag=="TargetAttack")
         {
             _isDamagedTargetAttack = true;
             _countDamagedTargetAttack++;
