@@ -9,12 +9,21 @@ public class EnemyMoves : MonoBehaviour
     [SerializeField] float _moveSpeed = 3;
     [SerializeField] float _attackCoolTime = 3;
     [SerializeField] GameObject _longAttackEffect;
+    [SerializeField] GameObject _weapon;
+
+
+
 
     /// <summary>trueだったら思考</summary>
     bool _thinkNow = false;
 
     /// <summary>特定の行動をしているときは行動しない。攻撃等は多数呼ばれるから</summary>
     bool _isActionNow = false;
+
+    /// <summary>ターゲット攻撃を喰らってるかどうか</summary>
+    bool _isDamagedTargetAttack = false;
+
+    int _countDamagedTargetAttack = 0;
 
     JustKaihiManager _justKaihiManager;
     PauseManager _pauseManager = default;
@@ -23,7 +32,7 @@ public class EnemyMoves : MonoBehaviour
     float _time;
     float time = 1;
 
-    [SerializeField] GameObject _weapon;
+
 
     Rigidbody _rb;
     Animator _anim;
@@ -55,6 +64,13 @@ public class EnemyMoves : MonoBehaviour
     {
         SetAi();
 
+        if (FindObjectOfType<TargetSystem>()._targetEnemy == this.gameObject)
+        {
+            _enemyAction = EnemyAction.TargetAttackDamaged;
+        }
+
+
+
         switch (_enemyAction)
         {
             case EnemyAction.Wait:
@@ -84,7 +100,9 @@ public class EnemyMoves : MonoBehaviour
                 Back();
                 break;
 
-
+            case EnemyAction.TargetAttackDamaged:
+                TargetAttackDamaged();
+                break;
 
         }
     }
@@ -164,17 +182,17 @@ public class EnemyMoves : MonoBehaviour
     }
 
     void Damaged()
-    {       
+    {
         _isActionNow = true;
         float h = GameObject.FindGameObjectWithTag("Player").transform.position.x - transform.position.x;
         _rb.velocity = Vector3.zero;
-        if(h>0)
+        if (h > 0)
         {
             _rb.AddForce(transform.right * 3, ForceMode.Impulse);
         }
         else
         {
-            _rb.AddForce(-1*transform.right * 3, ForceMode.Impulse);
+            _rb.AddForce(-1 * transform.right * 3, ForceMode.Impulse);
         }
 
         StartCoroutine(Damagedd());
@@ -183,7 +201,7 @@ public class EnemyMoves : MonoBehaviour
     {
         _hp--;
         Debug.Log(_hp);
-        if(_hp<=0)
+        if (_hp <= 0)
         {
             Destroy(gameObject);
             yield break;
@@ -273,7 +291,7 @@ public class EnemyMoves : MonoBehaviour
             yield break;
         }
         _weaponAnim.Play("ArrmerEnemyWeaponAttackClose");
-       //_enemyAction = EnemyAction.Next;
+        //_enemyAction = EnemyAction.Next;
         yield return new WaitForSeconds(1.1f + _attackCoolTime);
         if (_enemyAction == EnemyAction.Damaged)
         {
@@ -317,6 +335,24 @@ public class EnemyMoves : MonoBehaviour
         _isActionNow = false;
     }
 
+    void TargetAttackDamaged()
+    {
+        _isActionNow = true;
+        if(_countDamagedTargetAttack>0 && !_isDamagedTargetAttack)
+        {
+            StartCoroutine(TargetAttackDamagedC());
+        }
+    }
+
+    IEnumerator TargetAttackDamagedC()
+    {
+        _countDamagedTargetAttack = 0;
+        yield return new WaitForSeconds(1);
+        _isActionNow = false;
+        _isDamagedTargetAttack = false;
+    }
+
+
     public enum EnemyAction
     {
         Next,
@@ -329,6 +365,7 @@ public class EnemyMoves : MonoBehaviour
         LongAttack,
         Back,
         Damaged,
+        TargetAttackDamaged,
     }
 
     private void OnTriggerEnter(Collider other)
@@ -339,9 +376,15 @@ public class EnemyMoves : MonoBehaviour
             Damaged();
         }
 
-        if(other.gameObject.tag =="RaisingAttack")
+        if (other.gameObject.tag == "RaisingAttack")
         {
 
+        }
+
+        if(other.gameObject.tag=="")
+        {
+            _isDamagedTargetAttack = true;
+            _countDamagedTargetAttack++;
         }
     }
 
