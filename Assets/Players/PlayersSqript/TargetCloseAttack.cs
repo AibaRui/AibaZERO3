@@ -70,6 +70,7 @@ public class TargetCloseAttack : MonoBehaviour
 
     PauseManager _pauseManager = default;
     Rigidbody _rb;
+    Animator _anim;
     private void Awake()
     {
         _pauseManager = GameObject.FindObjectOfType<PauseManager>();
@@ -78,6 +79,7 @@ public class TargetCloseAttack : MonoBehaviour
     void Start()
     {
         _rb = gameObject.GetComponent<Rigidbody>();
+        _anim = gameObject.GetComponent<Animator>();
         _weaponAnim = _weaponAnim.gameObject.GetComponent<Animator>();
     }
 
@@ -132,6 +134,7 @@ public class TargetCloseAttack : MonoBehaviour
 
     public void Attack()
     {
+        _anim.SetBool("isTargetAttack", true);
         _isTargetAttackNow = true;
         _rb.velocity = Vector3.zero;
         _playerInBattle._playerAction = PlayerInBattle.PlayerAction.Attack;
@@ -183,6 +186,7 @@ public class TargetCloseAttack : MonoBehaviour
                         _releaseEnemyCount = 0;
                         _isReleaceEnemy = true;
 
+                        _anim.Play("P_TargetAttack2");
                         if (_targetAttackCount == 2)
                         {
                             _weaponAnim.Play("Zangeki1");
@@ -246,17 +250,20 @@ public class TargetCloseAttack : MonoBehaviour
         Rigidbody _rbEnemy = _targetSystem._targetEnemy.GetComponent<Rigidbody>();
         if (_targetAttackCount == 5)//敵を向いてる方向に弾き飛ばす
         {
+            _anim.Play("P_TargetAttackEnd");
+
             FindObjectOfType<EnemyMoves>()._isDamagedTargetAttack = false;
             _rbEnemy.isKinematic = false;
             Vector2 ve = new Vector2(transform.localScale.x, 1);
             _rbEnemy.AddForce(ve * _barsePower, ForceMode.Impulse);
             _targetSystem._targetEnemy = null;
 
+            _anim.SetBool("isTargetAttack", false);
             _isTargetAttackNow = false;
         }
         else
         {
-
+            _anim.Play("P_TargetAttack2");
             //_rbEnemy.velocity = Vector3.zero;
             _rbEnemy.isKinematic = true;
 
@@ -273,6 +280,7 @@ public class TargetCloseAttack : MonoBehaviour
     /// <summary>敵を引き寄せるターゲットアタック(遠い時)</summary>
     public IEnumerator TargetAttackFar()
     {
+        _anim.Play("P_TargetAttackS");
         var go = Instantiate(_farEffect);
         go.transform.position = _targetSystem._targetEnemy.transform.position;
         go.transform.SetParent(_targetSystem._targetEnemy.transform);
@@ -292,6 +300,7 @@ public class TargetCloseAttack : MonoBehaviour
 
     IEnumerator RevarseTargetAttack()
     {
+        _anim.Play("P_TargetAttackEnd");
         FindObjectOfType<EnemyMoves>()._isDamagedTargetAttack = false;
         Vector2 hani = _crosshairController.transform.position - transform.position;
 
@@ -310,6 +319,7 @@ public class TargetCloseAttack : MonoBehaviour
         _targetSystem._targetEnemy = null;
 
         yield return new WaitForSeconds(0.5f);
+        _anim.SetBool("isTargetAttack", false);
         _isTargetAttackNow = false;
 
         _attackCloseController._downSpeed = false;
@@ -368,6 +378,8 @@ public class TargetCloseAttack : MonoBehaviour
         _releaseEnemyCount += Time.deltaTime;
         if (_releaseEnemyCount > _releaseEnemyCountLimit)
         {
+            _anim.SetBool("isTargetAttack", false);
+            _anim.Play("P_TargetAttackEnd");
             _weaponAnim.Play("Zangeki4");
             var go = Instantiate(_effectEnd);
             go.transform.position = _effectPos.position;

@@ -29,8 +29,6 @@ public class EnemyMoves : MonoBehaviour
     PauseManager _pauseManager = default;
     Vector3 _angularVelocity;
     Vector3 _velocity;
-    float _time;
-    float time = 1;
 
     public bool _isJustKaihi = false;
 

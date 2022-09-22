@@ -18,7 +18,7 @@ public class DownAttack : MonoBehaviour
     bool _isDownNow = false;
     bool _isGround = false;
     Animator _anim;
-  [SerializeField]  Animator _weaponAnim;
+    [SerializeField] Animator _weaponAnim;
     Rigidbody _rb;
     void Start()
     {
@@ -28,7 +28,7 @@ public class DownAttack : MonoBehaviour
     }
     void Update()
     {
-        if (_attackCloseController._closeAttack&&_attackCloseController._pushdKey==AttackCloseController.PushdKey.DownAttack)
+        if (_attackCloseController._closeAttack && _attackCloseController._pushdKey == AttackCloseController.PushdKey.DownAttack)
         {
             Effect();
         }
@@ -37,6 +37,7 @@ public class DownAttack : MonoBehaviour
 
     public void Attack()
     {
+        _anim.Play("P_AttackDown");
         _isDownNow = true;
         _attackCloseController.airTime = 0;
         _attackCloseController._downSpeed = false;

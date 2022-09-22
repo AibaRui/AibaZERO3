@@ -246,7 +246,6 @@ public class FireAttack : MonoBehaviour
         {
              _isGround = true;
             _downSpeed = false;
-           Debug.Log("kk");
         }
     }
 

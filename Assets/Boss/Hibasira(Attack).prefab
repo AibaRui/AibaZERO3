@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 5256721564997164263}
   - component: {fileID: 4524752967779126721}
   - component: {fileID: 683296842435139255}
+  - component: {fileID: 6924307328336251043}
+  - component: {fileID: 3740600615924952120}
   m_Layer: 0
   m_Name: Hibasira(Attack)
   m_TagString: Untagged
@@ -119,3 +121,28 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 2.11, y: 3.78, z: 9.42}
   m_Center: {x: 0.28, y: 0.38, z: 0}
+--- !u!114 &6924307328336251043
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 151594086968354872}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: daf76be5732b84d4396747f0ae79715d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _lifeTime: 2
+--- !u!114 &3740600615924952120
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 151594086968354872}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6757c1d17e2dc647b4a028de32a41cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

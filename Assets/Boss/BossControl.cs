@@ -33,7 +33,7 @@ public class BossControl : MonoBehaviour
     [Tooltip("ボスの移動場所")] [SerializeField] Transform[] _pos = new Transform[2];
 
     /// <summary>攻撃中かどうか</summary>
-    bool _isAttackNow = true;
+    bool _isAttackNow = false;
     /// <summary>攻撃可能かどうか</summary>
     bool _isAttack = true;
 
@@ -82,14 +82,17 @@ public class BossControl : MonoBehaviour
 
         if (num == 0)
         {
+            Debug.Log("FFFF");
             StartCoroutine(FireWall());
         }
         else if (num == 1)
         {
+            Debug.Log("EEEXXX");
             StartCoroutine(Exprosion());
         }
         else if (num == 2)
         {
+            Debug.Log("VVVV");
             StartCoroutine(FireBall());
         }
         _isAttackNow = true;
@@ -106,22 +109,28 @@ public class BossControl : MonoBehaviour
     /// <summary>火柱</summary>
     IEnumerator FireWall()
     {
+        Debug.Log("FFFF");
         for (int i = 0; i < 5; i++)
         {
             var go = Instantiate(_fireWall);
             go.transform.position = _player.transform.position;
             yield return new WaitForSeconds(3);
         }
+
+
+
         _endAttack = true;
         _isAttackNow = false;
     }
 
     IEnumerator Exprosion()
     {
+
         for (int i = 0; i < 5; i++)
         {
+            Debug.Log(i);
             var num = Random.Range(0, 3);
-            var go = Instantiate(_fireWall);
+            var go = Instantiate(_exprosion);
             if (num == 0)//プレイヤーの右側
             {
                 Vector3 ve = new Vector3(_player.transform.position.x + 2, _player.transform.position.y, -3);
@@ -139,20 +148,24 @@ public class BossControl : MonoBehaviour
             }
             yield return new WaitForSeconds(3);
         }
+
         _endAttack = true;
         _isAttackNow = false;
+
     }
 
     IEnumerator FireBall()
     {
+
         for (int i = 0; i < 3; i++)
         {
-            var go = Instantiate(_fireWall);
+            var go = Instantiate(_fireBall);
             go.transform.position = _posFireBall[i].position;
-            Rigidbody _rb = go.gameObject.GetComponent<Rigidbody>();
+            Rigidbody _rb = go.GetComponent<Rigidbody>();
             _rb.velocity = new Vector3(-3, 0, 0);
             yield return new WaitForSeconds(3);
         }
+
         _endAttack = true;
         _isAttackNow = false;
     }

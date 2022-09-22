@@ -5,7 +5,7 @@ using Cinemachine;
 
 public class AttackCloseController : MonoBehaviour
 {
-    [SerializeField] int _attackZanryou = 10;
+    [SerializeField] int _attackZanryou = 1000;
 
     [SerializeField] RisingAttack _risingAttack;
     [SerializeField] DownAttack _downAttack;

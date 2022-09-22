@@ -4,10 +4,6 @@ using UnityEngine;
 
 public class AmEnemyWepon : MonoBehaviour
 {
-    [SerializeField] LayerMask _layerBase;
-    [SerializeField] LayerMask _layerNoHit;
-
-
     JustKaihiManager _justKaihiManager;
     PauseManager _pauseManager = default;
     Animator _anim;
@@ -74,13 +70,11 @@ public class AmEnemyWepon : MonoBehaviour
     public void PauseJustKaihi()
     {
         _anim.speed = 0.3f;
-        gameObject.layer = _layerNoHit;
     }
 
     public void ResumeJustKaihi()
     {
         _anim.speed = 1;
-        gameObject.layer = _layerBase;
     }
 
 

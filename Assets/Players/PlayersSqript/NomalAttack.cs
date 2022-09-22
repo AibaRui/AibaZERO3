@@ -49,16 +49,18 @@ public class NomalAttack : MonoBehaviour
     int _noMoveAttackCount = 0;
 
     /// <summary>空中攻撃のコンボ継続を確認する</summary>
-    bool _countUpAttackChain=false;
+    bool _countUpAttackChain = false;
     /// <summary>空中攻撃のコンボ継続時間をカウントする</summary>
     float _countUpAttackChainCount = 0;
     /// <summary>空中攻撃のコンボ継続可能時間をカウントする</summary>
     [SerializeField] float _countUpAttackChainCountLimit = 2;
 
+    Animator _anim;
     Rigidbody _rb;
     void Start()
     {
         _rb = gameObject.GetComponent<Rigidbody>();
+        _anim = gameObject.GetComponent<Animator>();
         _weaponAnim = _weaponAnim.gameObject.GetComponent<Animator>();
     }
 
@@ -95,6 +97,10 @@ public class NomalAttack : MonoBehaviour
         _playerInBattle._playerAction = PlayerInBattle.PlayerAction.Nomal;
         _attackCloseController._closeAttack = false;
         _attackCloseController._isAttackNow = false;
+        _attackCloseController._downSpeed = false;
+
+        _anim.SetBool("isAttack", false);
+
         //if (_enemyBox.transform.childCount != 0)
         //{
         //    //_enemyBox.transform.DetachChildren();
@@ -172,10 +178,11 @@ public class NomalAttack : MonoBehaviour
     public void UpAttack()
     {
         _playerInBattle._playerAction = PlayerInBattle.PlayerAction.Attack;
+        _rb.velocity = Vector3.zero;
         _attackCloseController._downSpeed = true;
         _pushdKey = PushdKey.UpAttack;
         StartCoroutine(ReleaseAttackStiffenss());
-        _rb.velocity = Vector3.zero;
+
     }
     public void UpAttackEffect()
     {
@@ -223,9 +230,11 @@ public class NomalAttack : MonoBehaviour
 
     public void NoMoveAttackEffeck()
     {
+        _anim.SetBool("isAttack", true);
         //////////////////////////////地上での攻撃
         if (_noMoveAttackCount == 0)
         {
+            _anim.Play("P_Attack1");
             _noMoveAttackCount++;
             _weaponAnim.Play("Zangeki1");                                       //鎌のアニメーション
             var effect = Instantiate(_zangekiEffects[0]);                       //エッフェクトを出す
@@ -233,6 +242,7 @@ public class NomalAttack : MonoBehaviour
         }
         else if (_noMoveAttackCount == 1)
         {
+            _anim.Play("P_Attack2");
             _noMoveAttackCount++;
             _weaponAnim.Play("Zangeki2");
             var effect = Instantiate(_zangekiEffects[1]);
@@ -240,6 +250,7 @@ public class NomalAttack : MonoBehaviour
         }
         else if (_noMoveAttackCount == 2)
         {
+            _anim.Play("P_Attack3");
             _noMoveAttackCount++;
             _weaponAnim.Play("Zangeki3");
             var effect = Instantiate(_zangekiEffects[2]);
@@ -248,6 +259,7 @@ public class NomalAttack : MonoBehaviour
         }
         else if (_noMoveAttackCount == 3)
         {
+            _anim.Play("P_Attack4");
             _noMoveAttackCount++;
             _weaponAnim.Play("Zangeki4");
             var effect = Instantiate(_zangekiEffects[3]);
@@ -255,6 +267,7 @@ public class NomalAttack : MonoBehaviour
         }
         else if (_noMoveAttackCount == 4)
         {
+            _anim.Play("P_Attack5");
             _weaponAnim.Play("Zangeki5");
             var effect = Instantiate(_zangekiEffects[4]);
             effect.transform.position = _zangekiEffectsPosition[4].position;
@@ -292,7 +305,7 @@ public class NomalAttack : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if(collision.gameObject.tag=="Ground")
+        if (collision.gameObject.tag == "Ground")
         {
             _upAttackCount = 0;
         }
