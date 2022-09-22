@@ -32,6 +32,9 @@ public class TargetCloseAttack : MonoBehaviour
     [Tooltip("ˆø‚«Šñ‚¹‚½“G‚ğ—£‚·‚Ü‚Å‚ÌŠÔ")] [SerializeField] float _releaseEnemyCountLimit = 2;
 
 
+    [Header("“G‚ğˆø‚«Šñ‚¹‚½‚¢êŠ")]
+    [SerializeField] float _barsePower = 5;
+
     [SerializeField] float _moveDistance = 2;
 
     [SerializeField] Animator _weaponAnim;
@@ -59,6 +62,9 @@ public class TargetCloseAttack : MonoBehaviour
     public bool _isOkTargetAttack = true;
 
     bool _endJudge = false;
+
+    //ƒ^[ƒQƒbƒgƒVƒXƒeƒ€‚Åg‚¤
+  public  bool _isTargetAttackNow=false;
 
     bool _isRevarseTargetAttack = false;
 
@@ -126,6 +132,7 @@ public class TargetCloseAttack : MonoBehaviour
 
     public void Attack()
     {
+        _isTargetAttackNow = true;
         _rb.velocity = Vector3.zero;
         _playerInBattle._playerAction = PlayerInBattle.PlayerAction.Attack;
 
@@ -239,11 +246,13 @@ public class TargetCloseAttack : MonoBehaviour
         Rigidbody _rbEnemy = _targetSystem._targetEnemy.GetComponent<Rigidbody>();
         if (_targetAttackCount == 5)//“G‚ğŒü‚¢‚Ä‚é•ûŒü‚É’e‚«”ò‚Î‚·
         {
-
+            FindObjectOfType<EnemyMoves>()._isDamagedTargetAttack = false;
             _rbEnemy.isKinematic = false;
             Vector2 ve = new Vector2(transform.localScale.x, 1);
-            _rbEnemy.AddForce(ve * 3, ForceMode.Impulse);
+            _rbEnemy.AddForce(ve * _barsePower, ForceMode.Impulse);
             _targetSystem._targetEnemy = null;
+
+            _isTargetAttackNow = false;
         }
         else
         {
@@ -297,10 +306,11 @@ public class TargetCloseAttack : MonoBehaviour
         Rigidbody _rbEnemy = _targetSystem._targetEnemy.GetComponent<Rigidbody>(); //“G‚ğŒü‚¢‚Ä‚é•ûŒü‚É’e‚«”ò‚Î‚·
         _rbEnemy.isKinematic = false;
         Vector2 ve = new Vector2(transform.localScale.x, 1);
-        _rbEnemy.AddForce(ve * 3, ForceMode.Impulse);
+        _rbEnemy.AddForce(ve * _barsePower, ForceMode.Impulse);
         _targetSystem._targetEnemy = null;
 
         yield return new WaitForSeconds(0.5f);
+        _isTargetAttackNow = false;
 
         _attackCloseController._downSpeed = false;
         _playerInBattle._playerAction = PlayerInBattle.PlayerAction.Nomal;
@@ -361,6 +371,7 @@ public class TargetCloseAttack : MonoBehaviour
             _weaponAnim.Play("Zangeki4");
             var go = Instantiate(_effectEnd);
             go.transform.position = _effectPos.position;
+            FindObjectOfType<EnemyMoves>()._isDamagedTargetAttack = false;
 
 
             _targetAttackCount = 0;
@@ -369,7 +380,7 @@ public class TargetCloseAttack : MonoBehaviour
             _rbEnemy.isKinematic = false;
 
             Vector2 ve = new Vector2(transform.localScale.x, 1);
-            _rbEnemy.AddForce(ve * 3, ForceMode.Impulse);
+            _rbEnemy.AddForce(ve * _barsePower, ForceMode.Impulse);
             _targetSystem._targetEnemy = null;
 
             _enemyBox.transform.DetachChildren();
@@ -386,7 +397,7 @@ public class TargetCloseAttack : MonoBehaviour
             _attackCloseController._isAttackNow = false;
             _attackCloseController.airTime = 0;
             _attackCloseController._downSpeed = false;
-
+            _isTargetAttackNow = false;
         }
 
     }

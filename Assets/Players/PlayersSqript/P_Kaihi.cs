@@ -44,7 +44,6 @@ public class P_Kaihi : MonoBehaviour
     private void Awake()
     {
         _pauseManager = GameObject.FindObjectOfType<PauseManager>();
-
         _justKaihiManager = GameObject.FindObjectOfType<JustKaihiManager>();
 
     }
@@ -203,4 +202,38 @@ public class P_Kaihi : MonoBehaviour
 
     }
 
+    void OnEnable()
+    {
+        // 呼んで欲しいメソッドを登録する。
+        _justKaihiManager.OnJustKaihiResume += PauseResumeJustKaihi;
+        // _anim = gameObject.GetComponent<Animator>();
+    }
+
+    void OnDisable()
+    {
+        // OnDisable ではメソッドの登録を解除すること。さもないとオブジェクトが無効にされたり破棄されたりした後にエラーになってしまう。
+        _justKaihiManager.OnJustKaihiResume -= PauseResumeJustKaihi;
+    }
+
+    void PauseResumeJustKaihi(bool isPause)
+    {
+        if (isPause)
+        {
+            PauseJustKaihi();
+        }
+        else
+        {
+            ResumeJustKaihi();
+        }
+    }
+
+    public void PauseJustKaihi()
+    {
+
+    }
+
+    public void ResumeJustKaihi()
+    {
+
+    }
 }

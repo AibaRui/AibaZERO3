@@ -21,7 +21,7 @@ public class EnemyMoves : MonoBehaviour
     bool _isActionNow = false;
 
     /// <summary>ターゲット攻撃を喰らってるかどうか</summary>
-  public  bool _isDamagedTargetAttack = false;
+    public bool _isDamagedTargetAttack = false;
 
     int _countDamagedTargetAttack = 0;
 
@@ -31,6 +31,8 @@ public class EnemyMoves : MonoBehaviour
     Vector3 _velocity;
     float _time;
     float time = 1;
+
+    public bool _isJustKaihi = false;
 
 
 
@@ -64,6 +66,11 @@ public class EnemyMoves : MonoBehaviour
     {
         SetAi();
 
+
+        if (_isJustKaihi)
+        {
+            _isActionNow = true;
+        }
         if (FindObjectOfType<TargetSystem>()._targetEnemy == this.gameObject)
         {
             _enemyAction = EnemyAction.TargetAttackDamaged;
@@ -186,13 +193,13 @@ public class EnemyMoves : MonoBehaviour
         _isActionNow = true;
         float h = GameObject.FindGameObjectWithTag("Player").transform.position.x - transform.position.x;
         _rb.velocity = Vector3.zero;
-        if (h > 0)
+        if (h >= 0)
         {
-            _rb.AddForce(transform.right * 3, ForceMode.Impulse);
+            _rb.AddForce(transform.right * -2, ForceMode.Impulse);
         }
         else
         {
-            _rb.AddForce(-1 * transform.right * 3, ForceMode.Impulse);
+            _rb.AddForce(1 * transform.right * 2, ForceMode.Impulse);
         }
 
         StartCoroutine(Damagedd());
@@ -220,6 +227,7 @@ public class EnemyMoves : MonoBehaviour
             return;
         }
         _isActionNow = true;
+        Dirction();
         StartCoroutine(Stopa());
     }
     IEnumerator Stopa()
@@ -231,6 +239,7 @@ public class EnemyMoves : MonoBehaviour
     void Back()
     {
         var player = GameObject.FindGameObjectWithTag("Player");
+        Dirction();
         if (player)
         {
             Vector2 v = player.transform.position - transform.position;
@@ -268,6 +277,7 @@ public class EnemyMoves : MonoBehaviour
         Vector2 dir = _player.transform.position - transform.position;
 
         _rb.velocity = new Vector2(dir.normalized.x * 3, _rb.velocity.y);
+        Dirction();
 
     }
 
@@ -278,6 +288,7 @@ public class EnemyMoves : MonoBehaviour
             return;
         }
         _isActionNow = true;
+        Dirction();
 
         // Debug.Log("Attack");
         StartCoroutine(a());
@@ -309,6 +320,7 @@ public class EnemyMoves : MonoBehaviour
             return;
         }
         _isActionNow = true;
+        Dirction();
         StartCoroutine(b());
 
     }
@@ -340,20 +352,42 @@ public class EnemyMoves : MonoBehaviour
     void TargetAttackDamaged()
     {
         _isActionNow = true;
-        if(_countDamagedTargetAttack>0 && !_isDamagedTargetAttack)
+        Dirction();
+
+        if (_countDamagedTargetAttack > 0 && !_isDamagedTargetAttack)
         {
             StartCoroutine(TargetAttackDamagedC());
+
         }
     }
 
     IEnumerator TargetAttackDamagedC()
     {
+        Debug.Log("AAAD");
+        _rb.velocity = Vector3.zero;
         _countDamagedTargetAttack = 0;
         yield return new WaitForSeconds(2);
+
         _isActionNow = false;
         _isDamagedTargetAttack = false;
+        _enemyAction = EnemyAction.Damaged;
+        Damaged();
     }
 
+
+    void Dirction()
+    {
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        Vector2 v = player.transform.position - transform.position;
+        if (v.x > 0)
+        {
+            transform.localScale = new Vector3(-1, 1, 1);
+        }
+        else if (v.x < 0)
+        {
+            transform.localScale = new Vector3(1, 1, 1);
+        }
+    }
 
     public enum EnemyAction
     {
@@ -372,7 +406,7 @@ public class EnemyMoves : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "P_Attack")
+        if (other.gameObject.tag == "P_Attack" && _enemyAction != EnemyAction.TargetAttackDamaged)
         {
             _enemyAction = EnemyAction.Damaged;
             Damaged();
@@ -383,10 +417,11 @@ public class EnemyMoves : MonoBehaviour
 
         }
 
-        if(other.gameObject.tag=="TargetAttack")
+        if (other.gameObject.tag == "TargetAttack")
         {
             _isDamagedTargetAttack = true;
             _countDamagedTargetAttack++;
+            _hp--;
         }
     }
 
@@ -431,8 +466,9 @@ public class EnemyMoves : MonoBehaviour
         //   _angularVelocity = _rb.angularVelocity;
         _velocity = _rb.velocity;
         _rb.velocity = new Vector3(_rb.velocity.x / 10, _rb.velocity.y / 10, 0);
+        Debug.Log("Slow");
         _anim.speed = 0.3f;
-        time = 10;
+
     }
 
     public void ResumeJustKaihi()
@@ -442,7 +478,7 @@ public class EnemyMoves : MonoBehaviour
         // _rb.angularVelocity = _angularVelocity;
         _rb.velocity = _velocity;
         _anim.speed = 1;
-        time = 1;
+        _isActionNow = false;
     }
 
 

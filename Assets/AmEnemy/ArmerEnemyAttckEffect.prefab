@@ -13,7 +13,8 @@ GameObject:
   - component: {fileID: 4429220866372007958}
   - component: {fileID: 3345245581433122943}
   - component: {fileID: 780194116368786215}
-  m_Layer: 0
+  - component: {fileID: -3256723127182677753}
+  m_Layer: 6
   m_Name: ArmerEnemyAttckEffect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -132,3 +133,21 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.79, y: 3.3333333, z: 2.61}
   m_Center: {x: 0, y: 0, z: 1.17}
+--- !u!114 &-3256723127182677753
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4429220866372007953}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f701e5d7d0ffcd44ab4f36c7b74658e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _layerBase:
+    serializedVersion: 2
+    m_Bits: 64
+  _layerNoHit:
+    serializedVersion: 2
+    m_Bits: 128

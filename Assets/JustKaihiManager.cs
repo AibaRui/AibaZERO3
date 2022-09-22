@@ -6,7 +6,7 @@ public class JustKaihiManager : MonoBehaviour
 {
     public bool _isJustKaihi = false;
     /// <summary>true の時は一時停止とする</summary>
-    bool _justKaihiFlg = false;
+   public bool _justKaihiFlg = false;
     /// <summary>一時停止・再開を制御する関数の型（デリゲート）を定義する</summary>
     public delegate void JustKaihi(bool isPause);
     /// <summary>デリゲートを入れておく変数</summary>
@@ -49,6 +49,7 @@ public class JustKaihiManager : MonoBehaviour
 
         _justKaihiFlg = !_justKaihiFlg;
         _isJustKaihi = !_isJustKaihi;
+
         _onJustKaihiResume(_justKaihiFlg);  // これで変数に代入した関数を（全て）呼び出せる
     }
 

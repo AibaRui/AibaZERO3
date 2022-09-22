@@ -30,9 +30,12 @@ public class TargetSystem : MonoBehaviour
     [SerializeField] GameObject _cameraNomal;
     [SerializeField] GameObject _cameraFollow;
 
+    TargetCloseAttack _targetCloseAttack;
+
     void Start()
     {
         myRectTfm = _targetUI.GetComponent<RectTransform>();
+        _targetCloseAttack = FindObjectOfType<TargetCloseAttack>();
         //_orizinQuaternion = _virtualCamera.transform.rotation;
     }
 
@@ -56,7 +59,8 @@ public class TargetSystem : MonoBehaviour
 
         //if (!_attackClose._isAttackNow)
         //{
-
+        if(!_targetCloseAttack._isTargetAttackNow)
+        {
             if (Input.GetMouseButtonDown(2))
             {
                 var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -90,7 +94,8 @@ public class TargetSystem : MonoBehaviour
                     }
 
 
-              //  }
+                    //  }
+                }
             }
 
         }
