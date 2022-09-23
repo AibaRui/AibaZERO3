@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 5086438707826667023}
   - component: {fileID: 8370397220414601384}
   - component: {fileID: 330928298704456003}
+  - component: {fileID: -6280358895624699289}
   m_Layer: 0
   m_Name: TargetAttackEffect3
   m_TagString: TargetAttack
@@ -133,3 +134,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _lifetimeCountLimit: 0.3
+--- !u!114 &-6280358895624699289
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8022581577139980853}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6757c1d17e2dc647b4a028de32a41cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _isPlayer: 1

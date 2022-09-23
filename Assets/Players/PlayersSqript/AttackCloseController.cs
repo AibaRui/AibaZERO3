@@ -144,46 +144,49 @@ public class AttackCloseController : MonoBehaviour
     {
         if (!_pauseManager._isPause)
         {
-            ///////////////////////攻撃判定場所の移動/////////
-            float _h = Input.GetAxisRaw("Horizontal");
-
-
-
-            if (_attackCount == _attackZanryou)
+            if (_playerInBattle._damaged == false)
             {
-                okAttack = false;
-            }
+                ///////////////////////攻撃判定場所の移動/////////
+                float _h = Input.GetAxisRaw("Horizontal");
 
-            if (okAttack)   // 攻撃可能だったら攻撃
-            {
-                if (_isAttackNow == false)
+
+
+                if (_attackCount == _attackZanryou)
                 {
-                    Attack();
+                    okAttack = false;
                 }
-            }
-            else   //攻撃不可能だったらクールタイムを数える
-            {
-                CountCoolTime();
-            }
 
-            ResetCount();
+                if (okAttack)   // 攻撃可能だったら攻撃
+                {
+                    if (_isAttackNow == false)
+                    {
+                        Attack();
+                    }
+                }
+                else   //攻撃不可能だったらクールタイムを数える
+                {
+                    CountCoolTime();
+                }
+
+                ResetCount();
 
 
 
-            ////コンボ持続時間を数える
-            //if (_isAttackContnue)
-            //{
-            //   // CountContenueTime();
-            //}
+                ////コンボ持続時間を数える
+                //if (_isAttackContnue)
+                //{
+                //   // CountContenueTime();
+                //}
 
-            //空中攻撃時の移動制限
-            if (_downSpeed)
-            {
-                AirTime();
-            }
-            else
-            {
-                _rb.useGravity = true;
+                //空中攻撃時の移動制限
+                if (_downSpeed)
+                {
+                    AirTime();
+                }
+                else
+                {
+                    _rb.useGravity = true;
+                }
             }
 
         }

@@ -1,9 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+
 
 public class BossControl : MonoBehaviour
 {
+
+    [SerializeField] string _sceneName = "";
+    [SerializeField] GameObject _fadePanel;
+    [SerializeField] GameObject _box;
+
+    [SerializeField] AudioClip[] _auClip = new AudioClip[2];
+    AudioSource _aud;
+
     [Header("HP")]
     [Tooltip("HP")] [SerializeField] int _hp;
 
@@ -51,7 +61,7 @@ public class BossControl : MonoBehaviour
     }
     void Start()
     {
-
+        _aud = gameObject.GetComponent<AudioSource>();
     }
 
 
@@ -60,14 +70,22 @@ public class BossControl : MonoBehaviour
 
     void Update()
     {
-        if (!_isEvent)
+        if (_player)
         {
-            if (_endAttack)
+            if (!_isEvent)
             {
-                StartCoroutine(AttackLate());
-                _endAttack = false;
+                if (_endAttack)
+                {
+                    StartCoroutine(AttackLate());
+                    _endAttack = false;
+                }
+                MainRoutine();
             }
-            MainRoutine();
+        }
+
+        if (!_player)
+        {
+            _player = GameObject.FindGameObjectWithTag("Player");
         }
     }
 
@@ -78,6 +96,7 @@ public class BossControl : MonoBehaviour
         {
             return;
         }
+        _box.transform.DetachChildren();
         var num = Random.Range(0, 3);
 
         if (num == 0)
@@ -114,6 +133,7 @@ public class BossControl : MonoBehaviour
         {
             var go = Instantiate(_fireWall);
             go.transform.position = _player.transform.position;
+            go.transform.SetParent(_box.transform);
             yield return new WaitForSeconds(3);
         }
 
@@ -131,6 +151,7 @@ public class BossControl : MonoBehaviour
             Debug.Log(i);
             var num = Random.Range(0, 3);
             var go = Instantiate(_exprosion);
+            go.transform.SetParent(_box.transform);
             if (num == 0)//プレイヤーの右側
             {
                 Vector3 ve = new Vector3(_player.transform.position.x + 2, _player.transform.position.y, -3);
@@ -161,6 +182,7 @@ public class BossControl : MonoBehaviour
         {
             var go = Instantiate(_fireBall);
             go.transform.position = _posFireBall[i].position;
+            go.transform.SetParent(_box.transform);
             Rigidbody _rb = go.GetComponent<Rigidbody>();
             _rb.velocity = new Vector3(-3, 0, 0);
             yield return new WaitForSeconds(3);
@@ -174,8 +196,24 @@ public class BossControl : MonoBehaviour
     {
         if (other.gameObject.tag == "P_Attack")
         {
+            _aud.PlayOneShot(_auClip[1]);
             _hp--;
+            if (_hp <= 0)
+            {
+                StartCoroutine(Lode());
+            }
+
         }
+    }
+
+    IEnumerator Lode()
+    {
+        _fadePanel.SetActive(true);
+        _box.transform.DetachChildren();
+        Time.timeScale = 0.3f;
+        yield return new WaitForSeconds(0.5f);
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(_sceneName);
     }
 
 }

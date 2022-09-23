@@ -49,14 +49,20 @@ public class DownAttack : MonoBehaviour
     {
         if (_isDownNow && _isGround)
         {
-            _attackCloseController._closeAttack = false;
-            _attackCloseController._isAttackNow = false;
+            StartCoroutine(CoolTime());
             var effect = Instantiate(_downAttackEffect); //エフェクトを出す
             effect.transform.position = transform.position;
             _isDownNow = false;
             _weaponAnim.Play("DownAttack");
 
         }
+    }
+
+    IEnumerator CoolTime()
+    {
+        yield return new WaitForSeconds(1);
+        _attackCloseController._closeAttack = false;
+        _attackCloseController._isAttackNow = false;
     }
 
     public void MoveEnd()

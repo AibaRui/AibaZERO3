@@ -8,6 +8,8 @@ TagManager:
   - Ground
   - P_Attack
   - TargetAttack
+  - EnemyAttack
+  - Boss
   layers:
   - Default
   - TransparentFX
@@ -16,11 +18,11 @@ TagManager:
   - Water
   - UI
   - Enemy_BaseDamage
-  - Enemy_NoHitDamage
+  - Enemy_Attack
   - PlayerBase
-  - 
-  - 
-  - 
+  - Boss
+  - PlayerMuteki
+  - OnlyPlayerHitWall
   - 
   - 
   - 

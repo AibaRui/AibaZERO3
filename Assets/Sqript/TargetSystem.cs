@@ -33,6 +33,11 @@ public class TargetSystem : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(!_targetCloseAttack)
+        {
+            _targetCloseAttack = FindObjectOfType<TargetCloseAttack>();
+        }
+
         if (_targetCloseAttack)
         {
             if (!_targetCloseAttack._isTargetAttackNow)

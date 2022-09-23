@@ -19,7 +19,8 @@ public class NomalAttack : MonoBehaviour
     [Header("空中横移動の距離")]
     [Tooltip("空中横移動の距離")] [SerializeField] float _upMoveDis = 4;
 
-
+    [SerializeField] AudioClip[] _auClip = new AudioClip[5];
+    AudioSource _aud;
 
     [SerializeField] float _timeMove = 0.3f;
     [SerializeField] float _timeNoMove = 0.5f;
@@ -62,6 +63,7 @@ public class NomalAttack : MonoBehaviour
         _rb = gameObject.GetComponent<Rigidbody>();
         _anim = gameObject.GetComponent<Animator>();
         _weaponAnim = _weaponAnim.gameObject.GetComponent<Animator>();
+        _aud = gameObject.GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -171,6 +173,7 @@ public class NomalAttack : MonoBehaviour
 
     public void MoveAttackEffeck()
     {
+        _aud.PlayOneShot(_auClip[0]);
         var effect = Instantiate(_zangekiEffects[0]);                       //エッフェクトを出す
         effect.transform.position = _zangekiEffectsPosition[0].position;
     }
@@ -235,6 +238,7 @@ public class NomalAttack : MonoBehaviour
         if (_noMoveAttackCount == 0)
         {
             _anim.Play("P_Attack1");
+            _aud.PlayOneShot(_auClip[0]);
             _noMoveAttackCount++;
             _weaponAnim.Play("Zangeki1");                                       //鎌のアニメーション
             var effect = Instantiate(_zangekiEffects[0]);                       //エッフェクトを出す
@@ -243,6 +247,7 @@ public class NomalAttack : MonoBehaviour
         else if (_noMoveAttackCount == 1)
         {
             _anim.Play("P_Attack2");
+            _aud.PlayOneShot(_auClip[1]);
             _noMoveAttackCount++;
             _weaponAnim.Play("Zangeki2");
             var effect = Instantiate(_zangekiEffects[1]);
@@ -251,6 +256,7 @@ public class NomalAttack : MonoBehaviour
         else if (_noMoveAttackCount == 2)
         {
             _anim.Play("P_Attack3");
+            _aud.PlayOneShot(_auClip[2]);
             _noMoveAttackCount++;
             _weaponAnim.Play("Zangeki3");
             var effect = Instantiate(_zangekiEffects[2]);
@@ -260,6 +266,8 @@ public class NomalAttack : MonoBehaviour
         else if (_noMoveAttackCount == 3)
         {
             _anim.Play("P_Attack4");
+
+            _aud.PlayOneShot(_auClip[3]);
             _noMoveAttackCount++;
             _weaponAnim.Play("Zangeki4");
             var effect = Instantiate(_zangekiEffects[3]);
@@ -268,6 +276,7 @@ public class NomalAttack : MonoBehaviour
         else if (_noMoveAttackCount == 4)
         {
             _anim.Play("P_Attack5");
+            _aud.PlayOneShot(_auClip[4]);
             _weaponAnim.Play("Zangeki5");
             var effect = Instantiate(_zangekiEffects[4]);
             effect.transform.position = _zangekiEffectsPosition[4].position;

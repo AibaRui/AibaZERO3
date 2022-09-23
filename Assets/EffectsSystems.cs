@@ -10,6 +10,9 @@ public class EffectsSystems : MonoBehaviour
     Vector3 _angularVelocity;
     Vector3 _velocity;
 
+    [SerializeField] bool _isPlayer = false;
+
+
     Animator _anim;
     Rigidbody _rb;
     void Start()
@@ -64,15 +67,18 @@ public class EffectsSystems : MonoBehaviour
 
     public void PauseJustKaihi()
     {
-        Debug.Log("Slow");
-        _anim.speed = 0.3f;
-
-        if (_rb)
+        if (!_isPlayer)
         {
-            // ë¨ìxÅEâÒì]Çï€ë∂ÇµÅARigidbody Çí‚é~Ç∑ÇÈ
-            //   _angularVelocity = _rb.angularVelocity;
-            _velocity = _rb.velocity;
-            _rb.velocity = new Vector3(_rb.velocity.x / 10, _rb.velocity.y / 10, 0);
+            Debug.Log("Slow");
+            _anim.speed = 0.3f;
+
+            if (_rb)
+            {
+                // ë¨ìxÅEâÒì]Çï€ë∂ÇµÅARigidbody Çí‚é~Ç∑ÇÈ
+                //   _angularVelocity = _rb.angularVelocity;
+                _velocity = _rb.velocity;
+                _rb.velocity = new Vector3(_rb.velocity.x / 10, _rb.velocity.y / 10, 0);
+            }
         }
     }
 

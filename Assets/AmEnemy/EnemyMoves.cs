@@ -12,7 +12,10 @@ public class EnemyMoves : MonoBehaviour
     [SerializeField] GameObject _weapon;
     [SerializeField] GameObject _deathBody;
 
-
+    [SerializeField] AudioClip _attack1AudioClip;
+    [SerializeField] AudioClip _attack2AudioClip;
+    [SerializeField] AudioClip _damage;
+    AudioSource _aud;
 
     /// <summary>trueÇæÇ¡ÇΩÇÁévçl</summary>
     bool _thinkNow = false;
@@ -53,6 +56,7 @@ public class EnemyMoves : MonoBehaviour
         _rb = gameObject.GetComponent<Rigidbody>();
         _anim = gameObject.GetComponent<Animator>();
         _weaponAnim = _weapon.GetComponent<Animator>();
+        _aud = gameObject.GetComponent<AudioSource>();
     }
 
 
@@ -204,6 +208,7 @@ public class EnemyMoves : MonoBehaviour
     }
     IEnumerator Damagedd()
     {
+        _aud.PlayOneShot(_damage);
         _hp--;
         Debug.Log(_hp);
         if (_hp <= 0)
@@ -296,6 +301,7 @@ public class EnemyMoves : MonoBehaviour
     IEnumerator a()
     {
         //_anim.Play("Attack");
+        _aud.PlayOneShot(_attack1AudioClip);
         yield return new WaitForSeconds(0.5f);
         if (_enemyAction == EnemyAction.Damaged)
         {
@@ -326,6 +332,7 @@ public class EnemyMoves : MonoBehaviour
     IEnumerator b()
     {
         _weaponAnim.Play("ArmerEnemyWeaponFar1");
+        _aud.PlayOneShot(_attack2AudioClip);
         yield return new WaitForSeconds(0.5f);
         if (_enemyAction == EnemyAction.Damaged)
         {
@@ -364,7 +371,7 @@ public class EnemyMoves : MonoBehaviour
         Debug.Log("AAAD");
         _rb.velocity = Vector3.zero;
         _countDamagedTargetAttack = 0;
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(1);
 
         _isActionNow = false;
         _isDamagedTargetAttack = false;
@@ -404,7 +411,7 @@ public class EnemyMoves : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "P_Attack" && _enemyAction != EnemyAction.TargetAttackDamaged)
+        if (other.gameObject.tag == "P_Attack")
         {
             _enemyAction = EnemyAction.Damaged;
             Damaged();

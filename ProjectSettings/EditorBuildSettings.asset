@@ -5,7 +5,28 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
+  - enabled: 0
+    path: Assets/Scenes/Qest1(old).unity
+    guid: f1795f7756ce0944e978d4cb383cb634
+  - enabled: 1
+    path: Assets/Scenes/Title.unity
+    guid: 08b2274ad74b3054a97a71b8d4ee2753
+  - enabled: 1
+    path: Assets/Scenes/Tutorial.unity
+    guid: 9fc0d4010bbf28b4594072e72b8655ab
+  - enabled: 1
+    path: Assets/Scenes/Home.unity
+    guid: ceb510b9eaed5c4458a849783525cd79
   - enabled: 1
     path: Assets/Scenes/Qest1.unity
-    guid: f1795f7756ce0944e978d4cb383cb634
+    guid: 10204949a54bfa044bea9f9bbcc4ac21
+  - enabled: 1
+    path: Assets/Scenes/Qest1(End).unity
+    guid: f00c4da80c9cb2a4da7dc83602a58871
+  - enabled: 1
+    path: Assets/Scenes/Boss.unity
+    guid: 2c49854f4526eff429f2e920c68e18ed
+  - enabled: 1
+    path: Assets/Scenes/Boss1(End).unity
+    guid: b2afa8f7eb966524eb5b5da7b2d91ae4
   m_configObjects: {}

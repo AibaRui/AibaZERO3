@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8825721103053604310}
   - component: {fileID: 1228720334170297290}
   - component: {fileID: 7370877899626640399}
+  - component: {fileID: 1503205380411702955}
   m_Layer: 0
   m_Name: DownAttack(Green2)_0
   m_TagString: Untagged
@@ -105,6 +106,19 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &1503205380411702955
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 402738643526610125}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6757c1d17e2dc647b4a028de32a41cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _isPlayer: 1
 --- !u!1 &710104548715676736
 GameObject:
   m_ObjectHideFlags: 0
@@ -116,6 +130,7 @@ GameObject:
   - component: {fileID: 597494352009043664}
   - component: {fileID: 5848736716437784879}
   - component: {fileID: 2114349819924978449}
+  - component: {fileID: 1118358330381652932}
   m_Layer: 0
   m_Name: DownAttack(Perple)_0
   m_TagString: Untagged
@@ -210,6 +225,19 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &1118358330381652932
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 710104548715676736}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6757c1d17e2dc647b4a028de32a41cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _isPlayer: 1
 --- !u!1 &4534118839785862611
 GameObject:
   m_ObjectHideFlags: 0
@@ -225,6 +253,8 @@ GameObject:
   - component: {fileID: -3098649741936394272}
   - component: {fileID: 1350351393}
   - component: {fileID: 1350351394}
+  - component: {fileID: -9168074774000112599}
+  - component: {fileID: -8147051861117201328}
   m_Layer: 0
   m_Name: DownAttack(Black) 1_0
   m_TagString: Untagged
@@ -463,6 +493,32 @@ MonoBehaviour:
   m_UseImpactDirection: 0
   m_ScaleImpactWithMass: 0
   m_ScaleImpactWithSpeed: 0
+--- !u!114 &-9168074774000112599
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4534118839785862611}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6757c1d17e2dc647b4a028de32a41cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _isPlayer: 1
+--- !u!114 &-8147051861117201328
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4534118839785862611}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6757c1d17e2dc647b4a028de32a41cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _isPlayer: 1
 --- !u!1 &5847611544515617050
 GameObject:
   m_ObjectHideFlags: 0
@@ -474,6 +530,7 @@ GameObject:
   - component: {fileID: 961722082708197643}
   - component: {fileID: 7973026003655903063}
   - component: {fileID: 325946162374367004}
+  - component: {fileID: 2219582331864516712}
   m_Layer: 0
   m_Name: DownAttack(Green1)_0
   m_TagString: Untagged
@@ -568,6 +625,19 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &2219582331864516712
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5847611544515617050}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6757c1d17e2dc647b4a028de32a41cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _isPlayer: 1
 --- !u!1 &7483315117140725887
 GameObject:
   m_ObjectHideFlags: 0
@@ -579,6 +649,7 @@ GameObject:
   - component: {fileID: 1464407644904452810}
   - component: {fileID: 4545162466167258779}
   - component: {fileID: 176666511700915431}
+  - component: {fileID: 1662578538710677277}
   m_Layer: 0
   m_Name: DownAttack(PerpleBlack)_0
   m_TagString: Untagged
@@ -673,3 +744,16 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &1662578538710677277
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7483315117140725887}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6757c1d17e2dc647b4a028de32a41cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _isPlayer: 1

@@ -31,6 +31,7 @@ public class P_Kaihi : MonoBehaviour
     public bool _isDodging = false; 　//ジャスト回避判定
     public bool _isDodges = false; //他スクリプト用
 
+    bool _hit;
 
     Rigidbody _rb;
     Animator _anim;
@@ -60,38 +61,40 @@ public class P_Kaihi : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.LeftShift))//１
             {
-                _justKaihiManager.JustKaihiResume();
-
-                Debug.Log("Now");
-                _isDodges = true;//「Player_InQest」にて移動の制限
-
-
-                if (dodgeNowing == DodgeNowing.FAZE)          //回避中でない
+                if (FindObjectOfType<PlayerInBattle>()._damaged == false)
                 {
-                    Debug.Log("Go");
-                    _isDodging = true;
-                    _isDedge = true;     //回避処理の実装
+                    //_justKaihiManager.JustKaihiResume();
 
 
+                    _isDodges = true;//「Player_InQest」にて移動の制限
 
-                    if (transform.localScale.x == 1)
+
+                    if (dodgeNowing == DodgeNowing.FAZE)          //回避中でない
                     {
-                        _kaihiEffect.transform.localScale = new Vector3(-1, 1, 1);
+                        Debug.Log("Go");
+                        _isDodging = true;
+                        _isDedge = true;     //回避処理の実装
+
+
+
+                        if (transform.localScale.x == 1)
+                        {
+                            _kaihiEffect.transform.localScale = new Vector3(-1, 1, 1);
+                        }
+                        else
+                        {
+                            _kaihiEffect.transform.localScale = new Vector3(1, 1, 1);
+                        }
+                        var _effectInstance = Instantiate(_kaihiEffect);
+                        _effectInstance.transform.position = transform.position;
+                        _effectInstance.transform.SetParent(transform);
                     }
-                    else
-                    {
-                        _kaihiEffect.transform.localScale = new Vector3(1, 1, 1);
-                    }
-                    var _effectInstance = Instantiate(_kaihiEffect);
-                    _effectInstance.transform.position = transform.position;
-                    _effectInstance.transform.SetParent(transform);
                 }
             }
-
-            if (_isCount)
-            {
-                Count();
-            }
+                if (_isCount)
+                {               
+                    Count();
+                }
         }
     }
 
@@ -105,7 +108,7 @@ public class P_Kaihi : MonoBehaviour
                 {
                     _isCount = true;        //クールタイムを数えるメソッド
                     _justDodge = false;
-                    /* JustDodge();  */          //ジャスト回避
+                    JustDodge();      //ジャスト回避
                 }
                 else
                 {
@@ -117,21 +120,35 @@ public class P_Kaihi : MonoBehaviour
 
 
 
-    //IEnumerator JustDodge()
-    //{
-    //    Time.timeScale = 0.5f;
-    //    _mousePos = FindObjectOfType<CrosshairController>().transform.position;               //マウスのポジションを獲得
-    //    Debug.Log("JJJJJJUstKaihiZIkkou");
+    IEnumerator JustDodge()
+    {
+        Time.timeScale = 0.5f;
+        float _h = Input.GetAxisRaw("Horizontal");
+        Vector2 ve;
+        _justKaihiManager.JustKaihiResume();
+        if (_judgeCount == 0 && _h == 0)
+        {
+            ve = new Vector3(transform.localScale.x * -1, 0);
+            _rb.AddForce(ve * _dodgeSpeed, ForceMode.Impulse);
+        }
+        else if (_judgeCount == 0 && _h != 0)
+        {
+            ve = new Vector2(_h, 0);
+            _rb.AddForce(ve * _dodgeSpeed, ForceMode.Impulse);
+        }
 
-    //    _startPos = transform.position;
-    //    Vector3 _pos = new Vector3(_mousePos.x, _mousePos.y, gameObject.transform.position.z);
-    //    _rb.AddForce(_pos.normalized * _dodgeSpeed, ForceMode.Impulse);
-    //    yield return new WaitForSeconds(_srowTime);
-    //    Time.timeScale = 1;
+        yield return new WaitForSeconds(_srowTime);
+        Time.timeScale = 1;
 
-    //    _isCount = true;
-    //    _endJudg = true;
-    //}
+        _isDodging = true;
+        Debug.Log("KAIHI");
+        _judgeCount++;
+
+        _isCount = true;        //クールタイムを数えるメソッド
+        _isDedge = false;     //回避処理の実装
+        dodgeNowing = DodgeNowing.NOW;
+
+    }
 
 
     ///////////////////////////////////////////////////////////////////////////////////22222222222/////////////
@@ -184,12 +201,18 @@ public class P_Kaihi : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "")             //ジャスト回避
+        if (other.gameObject.tag == "JustHit")             //ジャスト回避
         {
-
+            _justDodge = true;
         }
+    }
 
-
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.tag == "JustHit")             //ジャスト回避
+        {
+            _justDodge = false;
+        }
     }
 
 

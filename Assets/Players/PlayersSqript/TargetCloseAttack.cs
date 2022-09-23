@@ -16,6 +16,10 @@ public class TargetCloseAttack : MonoBehaviour
     [Header("プレイヤー移動スクリプト")]
     [SerializeField] PlayerInBattle _playerInBattle;
 
+    [SerializeField] AudioClip[] _auClip = new AudioClip[5];
+    AudioSource _aud;
+
+
 
 
     [Header("敵を引き寄せたい場所")]
@@ -64,7 +68,7 @@ public class TargetCloseAttack : MonoBehaviour
     bool _endJudge = false;
 
     //ターゲットシステムで使う
-  public  bool _isTargetAttackNow=false;
+    public bool _isTargetAttackNow = false;
 
     bool _isRevarseTargetAttack = false;
 
@@ -81,6 +85,7 @@ public class TargetCloseAttack : MonoBehaviour
         _rb = gameObject.GetComponent<Rigidbody>();
         _anim = gameObject.GetComponent<Animator>();
         _weaponAnim = _weaponAnim.gameObject.GetComponent<Animator>();
+        _aud = gameObject.GetComponent<AudioSource>();
     }
 
     void Update()
@@ -93,9 +98,7 @@ public class TargetCloseAttack : MonoBehaviour
                 ReleaseEnemy();
             }
         }
-
         MoveEnd();
-
     }
 
     void MoveEnd()
@@ -171,6 +174,7 @@ public class TargetCloseAttack : MonoBehaviour
 
                         _isReleaceEnemy = false;
 
+                        _attackCloseController._isAttackNow = false;
                         _attackCloseController._downSpeed = false;
                         _targetAttackCount = 0;
                         _releaseEnemyCount = 0;
@@ -250,19 +254,25 @@ public class TargetCloseAttack : MonoBehaviour
         Rigidbody _rbEnemy = _targetSystem._targetEnemy.GetComponent<Rigidbody>();
         if (_targetAttackCount == 5)//敵を向いてる方向に弾き飛ばす
         {
+            _aud.PlayOneShot(_auClip[2]);
             _anim.Play("P_TargetAttackEnd");
 
-            FindObjectOfType<EnemyMoves>()._isDamagedTargetAttack = false;
+            if (FindObjectOfType<EnemyMoves>())
+            {
+                FindObjectOfType<EnemyMoves>()._isDamagedTargetAttack = false;
+            }
             _rbEnemy.isKinematic = false;
             Vector2 ve = new Vector2(transform.localScale.x, 1);
             _rbEnemy.AddForce(ve * _barsePower, ForceMode.Impulse);
             _targetSystem._targetEnemy = null;
 
+            _playerInBattle._playerAction = PlayerInBattle.PlayerAction.Nomal;
             _anim.SetBool("isTargetAttack", false);
             _isTargetAttackNow = false;
         }
         else
         {
+            _aud.PlayOneShot(_auClip[1]);
             _anim.Play("P_TargetAttack2");
             //_rbEnemy.velocity = Vector3.zero;
             _rbEnemy.isKinematic = true;
@@ -280,6 +290,7 @@ public class TargetCloseAttack : MonoBehaviour
     /// <summary>敵を引き寄せるターゲットアタック(遠い時)</summary>
     public IEnumerator TargetAttackFar()
     {
+        _aud.PlayOneShot(_auClip[0]);
         _anim.Play("P_TargetAttackS");
         var go = Instantiate(_farEffect);
         go.transform.position = _targetSystem._targetEnemy.transform.position;
@@ -300,8 +311,15 @@ public class TargetCloseAttack : MonoBehaviour
 
     IEnumerator RevarseTargetAttack()
     {
+        _playerInBattle._playerAction = PlayerInBattle.PlayerAction.Nomal;
         _anim.Play("P_TargetAttackEnd");
-        FindObjectOfType<EnemyMoves>()._isDamagedTargetAttack = false;
+        _aud.PlayOneShot(_auClip[2]);
+
+        if (FindObjectOfType<EnemyMoves>())
+        {
+            FindObjectOfType<EnemyMoves>()._isDamagedTargetAttack = false;
+        }
+
         Vector2 hani = _crosshairController.transform.position - transform.position;
 
         _isRevarseTargetAttack = true;
@@ -378,12 +396,19 @@ public class TargetCloseAttack : MonoBehaviour
         _releaseEnemyCount += Time.deltaTime;
         if (_releaseEnemyCount > _releaseEnemyCountLimit)
         {
+            _aud.PlayOneShot(_auClip[2]);
+            _playerInBattle._playerAction = PlayerInBattle.PlayerAction.Nomal;
             _anim.SetBool("isTargetAttack", false);
             _anim.Play("P_TargetAttackEnd");
             _weaponAnim.Play("Zangeki4");
             var go = Instantiate(_effectEnd);
             go.transform.position = _effectPos.position;
-            FindObjectOfType<EnemyMoves>()._isDamagedTargetAttack = false;
+
+            if (FindObjectOfType<EnemyMoves>())
+            {
+                FindObjectOfType<EnemyMoves>()._isDamagedTargetAttack = false;
+            }
+
 
 
             _targetAttackCount = 0;

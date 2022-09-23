@@ -6,6 +6,8 @@ public class ZangekiEffects : MonoBehaviour
 {
     float _lifetimeCount;
     [SerializeField] float _lifetimeCountLimit;
+    [SerializeField] AudioClip _au;
+    AudioSource _aud;
 
     GameObject _player;
 
@@ -13,6 +15,11 @@ public class ZangekiEffects : MonoBehaviour
     {
         _player = GameObject.FindGameObjectWithTag("Player");
         transform.localScale = _player.transform.localScale;
+        _aud = gameObject.GetComponent<AudioSource>();
+        if (_aud)
+        {
+            _aud.PlayOneShot(_au);
+        }
 
     }
 

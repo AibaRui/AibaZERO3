@@ -120,6 +120,8 @@ GameObject:
   - component: {fileID: 4632113741602735786}
   - component: {fileID: 2386437723892347607}
   - component: {fileID: 997073564269043081}
+  - component: {fileID: 8973048563054725604}
+  - component: {fileID: 3405313594495410225}
   m_Layer: 0
   m_Name: 4Zangeki(Black)
   m_TagString: P_Attack
@@ -301,6 +303,32 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 3, y: 2.5, z: 2.58}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &8973048563054725604
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7596041705455213473}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6757c1d17e2dc647b4a028de32a41cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _isPlayer: 1
+--- !u!114 &3405313594495410225
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7596041705455213473}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6757c1d17e2dc647b4a028de32a41cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _isPlayer: 1
 --- !u!1 &8968144281194065750
 GameObject:
   m_ObjectHideFlags: 0

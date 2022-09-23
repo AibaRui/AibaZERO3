@@ -119,6 +119,8 @@ GameObject:
   - component: {fileID: -6134701929481487210}
   - component: {fileID: -6589415837685492179}
   - component: {fileID: 4724466023654263262}
+  - component: {fileID: -4423581446904864462}
+  - component: {fileID: 6233306404603395734}
   m_Layer: 0
   m_Name: 5ZangekiEffect
   m_TagString: P_Attack
@@ -300,3 +302,29 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 5, y: 2.5, z: 3.92}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &-4423581446904864462
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8349014987137579907}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6757c1d17e2dc647b4a028de32a41cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _isPlayer: 1
+--- !u!114 &6233306404603395734
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8349014987137579907}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6757c1d17e2dc647b4a028de32a41cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _isPlayer: 1

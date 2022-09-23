@@ -11,6 +11,9 @@ public class PlayerInBattle : MonoBehaviour
     bool _isJump = false;
     bool _isRun = false;
     Rigidbody _rb;
+
+
+    public bool _damaged;
     Animator _anim;
     // SpriteRenderer _sp;
 
@@ -130,9 +133,15 @@ public class PlayerInBattle : MonoBehaviour
         {
             _anim.SetBool("WalkNomal", false);
         }
+    }
 
-
-
+    IEnumerator Damaged()
+    {
+        Debug.Log("Damage");
+        gameObject.layer = LayerMask.NameToLayer("PlayerMuteki");
+        yield return new WaitForSeconds(1);
+        gameObject.layer = LayerMask.NameToLayer("PlayerBase");
+        _damaged = false;
     }
 
 
@@ -143,8 +152,16 @@ public class PlayerInBattle : MonoBehaviour
         {
             _anim.SetBool("Jump", false);
 
-
             _isGround = true;
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.gameObject.tag == "EnemyAttack")
+        {
+            StartCoroutine(Damaged());
+            _damaged = true;
         }
     }
 
