@@ -7,6 +7,7 @@ public class PlayerInBattle : MonoBehaviour
     [SerializeField] float _moveSpeed = 2;
     [SerializeField] float _jumpPower = 4;
 
+    [SerializeField] int _hp;
     bool _isGround = false;
     bool _isJump = false;
     bool _isRun = false;
@@ -32,6 +33,7 @@ public class PlayerInBattle : MonoBehaviour
         _rb = GetComponent<Rigidbody>();
         _anim = GetComponent<Animator>();
         // _sp = GetComponent<SpriteRenderer>();
+        FindObjectOfType<PlayerHpControl>().ChangeHpText(_hp);
     }
 
 
@@ -162,6 +164,8 @@ public class PlayerInBattle : MonoBehaviour
         {
             StartCoroutine(Damaged());
             _damaged = true;
+            _hp--;
+            FindObjectOfType<PlayerHpControl>().ChangeHpText(_hp);
         }
     }
 

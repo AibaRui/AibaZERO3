@@ -16,9 +16,11 @@ public class TargetSystem : MonoBehaviour
 
     [SerializeField] GameObject _targetUI;
 
+    /// <summary>ターゲッティングをしているかどうか</summary>
     bool _targetting = false;
 
     private RectTransform myRectTfm;
+
     private Vector3 offset = new Vector3(0, 1.5f, 0);
 
     TargetCloseAttack _targetCloseAttack;
@@ -27,20 +29,26 @@ public class TargetSystem : MonoBehaviour
     {
         myRectTfm = _targetUI.GetComponent<RectTransform>();
         _targetCloseAttack = FindObjectOfType<TargetCloseAttack>();
-        //_orizinQuaternion = _virtualCamera.transform.rotation;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if(!_targetCloseAttack)
+        SetTarget();
+        UISetting();
+    }
+
+    void SetTarget()
+    {
+        //プレイヤーが見つからなかったら探す
+        if (!_targetCloseAttack)
         {
             _targetCloseAttack = FindObjectOfType<TargetCloseAttack>();
         }
 
+
         if (_targetCloseAttack)
         {
-            if (!_targetCloseAttack._isTargetAttackNow)
+            if (!_targetCloseAttack._isTargetAttackNow) //プレイヤーがターゲットアタックをしていないかチェック
             {
                 if (Input.GetMouseButtonDown(2))
                 {
@@ -48,7 +56,6 @@ public class TargetSystem : MonoBehaviour
 
                     if (Physics.Raycast(ray, out hit))  //マウスのポジションからRayを投げて何かに当たったらhitに入れる
                     {
-
                         if (hit.collider.gameObject.tag == "Enemy")
                         {
                             _targetEnemy = hit.collider.gameObject;
@@ -62,26 +69,25 @@ public class TargetSystem : MonoBehaviour
                             _targetting = false;
                             _targetUI.SetActive(false);
                         }
-
                     }
-                    //  }
                 }
             }
 
         }
+    }
+
+    /// <summary>UIのセッティング</summary>
+    void UISetting()
+    {
         if (_targetEnemy == null)
         {
             _targetUI.SetActive(false);
         }
         if (_targetting && _targetEnemy != null)
         {
-
             myRectTfm.position = RectTransformUtility.WorldToScreenPoint(Camera.main, _targetEnemy.transform.position + offset);
-
         }
-
     }
-
 
 
 }

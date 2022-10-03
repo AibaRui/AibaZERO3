@@ -42,7 +42,12 @@ public class InQestStart : MonoBehaviour
         _activeObjects.ForEach(i => i.SetActive(true));
         _noActiveObjects.ForEach(i => i.SetActive(false));
         _destroyObjects.ForEach(i => Destroy(i));
-        _main.Priority = 30;
+
+        if (_main)
+        {
+            _main.Priority = 30;
+        }
+
 
         if (_player)
         {

@@ -4,17 +4,35 @@ using UnityEngine;
 
 public class EnemyMoves : MonoBehaviour
 {
+    [Header("HP")]
+    [Tooltip("HP")] [SerializeField] int _hp;
 
-    [SerializeField] int _hp;
-    [SerializeField] float _moveSpeed = 3;
-    [SerializeField] float _attackCoolTime = 3;
-    [SerializeField] GameObject _longAttackEffect;
-    [SerializeField] GameObject _weapon;
-    [SerializeField] GameObject _deathBody;
+    [Header("移動速度")]
+    [Tooltip("移動速度")] [SerializeField] float _moveSpeed = 3;
 
-    [SerializeField] AudioClip _attack1AudioClip;
-    [SerializeField] AudioClip _attack2AudioClip;
-    [SerializeField] AudioClip _damage;
+    [Header("攻撃のクールタイム")]
+    [Tooltip("攻撃のクールタイム")] [SerializeField] float _attackCoolTime = 3;
+
+
+    [Header("遠距離攻撃時に出すエフェクト")]
+    [Tooltip("遠距離攻撃時に出すエフェクト")] [SerializeField] GameObject _longAttackEffect;
+
+    [Header("武器")]
+    [Tooltip("武器")] [SerializeField] GameObject _weapon;
+
+    [Header("デス時に出すオブジェクト")]
+    [Tooltip("デス時に出すオブジェクト")] [SerializeField] GameObject _deathBody;
+
+    [Header("近距離攻撃の音")]
+    [Tooltip("近距離攻撃の音")] [SerializeField] AudioClip _attackCloseAudioClip;
+
+    [Header("遠距離攻撃の音")]
+    [Tooltip("遠距離攻撃の音")] [SerializeField] AudioClip _attackFarAudioClip;
+
+    [Header("被ダメ時の音")]
+    [Tooltip("被ダメ時の音")] [SerializeField] AudioClip _damage;
+
+
     AudioSource _aud;
 
     /// <summary>trueだったら思考</summary>
@@ -73,13 +91,14 @@ public class EnemyMoves : MonoBehaviour
         {
             _isActionNow = true;
         }
+
         if (FindObjectOfType<TargetSystem>()._targetEnemy == this.gameObject)
         {
             _enemyAction = EnemyAction.TargetAttackDamaged;
         }
 
 
-
+        //現在の状況に応じた行動
         switch (_enemyAction)
         {
             case EnemyAction.Wait:
@@ -116,6 +135,7 @@ public class EnemyMoves : MonoBehaviour
         }
     }
 
+    /// <summary>行動決定</summary>
     void SetAi()
     {
         //タイマーを回してる間は思考させない
@@ -130,11 +150,7 @@ public class EnemyMoves : MonoBehaviour
 
     void MainRoutine()
     {
-        //Debug.Log("Think");
-
         float dir = Vector2.Distance(_player.transform.position, transform.position);
-
-
 
         if (dir < 5)
         {
@@ -208,9 +224,10 @@ public class EnemyMoves : MonoBehaviour
     }
     IEnumerator Damagedd()
     {
-        _aud.PlayOneShot(_damage);
         _hp--;
+        _aud.PlayOneShot(_damage);
         Debug.Log(_hp);
+
         if (_hp <= 0)
         {
             var go = Instantiate(_deathBody);
@@ -222,7 +239,7 @@ public class EnemyMoves : MonoBehaviour
         _isActionNow = false;
     }
 
-
+    /// <summary>その場に留まる行動 </summary>
     void Stop()
     {
         if (_isActionNow)
@@ -231,14 +248,15 @@ public class EnemyMoves : MonoBehaviour
         }
         _isActionNow = true;
         Dirction();
-        StartCoroutine(Stopa());
+        StartCoroutine(StopC());
     }
-    IEnumerator Stopa()
+    IEnumerator StopC()
     {
         yield return new WaitForSeconds(2);
         _isActionNow = false;
     }
 
+    /// <summary>プレイヤーから後ずさる行動 </summary>
     void Back()
     {
         var player = GameObject.FindGameObjectWithTag("Player");
@@ -255,9 +273,9 @@ public class EnemyMoves : MonoBehaviour
             return;
         }
         _isActionNow = true;
-        StartCoroutine(Backs());
+        StartCoroutine(BackC());
     }
-    IEnumerator Backs()
+    IEnumerator BackC()
     {
         yield return new WaitForSeconds(2);
 
@@ -273,42 +291,40 @@ public class EnemyMoves : MonoBehaviour
     {
         // Debug.Log("move");
     }
-
+    /// <summary>プレイヤーを追いかける行動 </summary>
     void Follow()
     {
-        // Debug.Log("Follow");
         Vector2 dir = _player.transform.position - transform.position;
-
         _rb.velocity = new Vector2(dir.normalized.x * 3, _rb.velocity.y);
         Dirction();
-
     }
 
+    /// <summary>近距離攻撃の行動 </summary>
     void Attack()
     {
         if (_isActionNow)
         {
             return;
         }
+        // Debug.Log("Attack");
+
         _isActionNow = true;
         Dirction();
-
-        // Debug.Log("Attack");
-        StartCoroutine(a());
-
+        StartCoroutine(AttackC());
     }
 
-    IEnumerator a()
+    IEnumerator AttackC()
     {
-        //_anim.Play("Attack");
-        _aud.PlayOneShot(_attack1AudioClip);
+        _aud.PlayOneShot(_attackCloseAudioClip);
+
         yield return new WaitForSeconds(0.5f);
+
         if (_enemyAction == EnemyAction.Damaged)
         {
             yield break;
         }
         _weaponAnim.Play("ArrmerEnemyWeaponAttackClose");
-        //_enemyAction = EnemyAction.Next;
+
         yield return new WaitForSeconds(1.1f + _attackCoolTime);
         if (_enemyAction == EnemyAction.Damaged)
         {
@@ -325,15 +341,17 @@ public class EnemyMoves : MonoBehaviour
         }
         _isActionNow = true;
         Dirction();
-        StartCoroutine(b());
+        StartCoroutine(LongAttackC());
 
     }
 
-    IEnumerator b()
+    IEnumerator LongAttackC()
     {
         _weaponAnim.Play("ArmerEnemyWeaponFar1");
-        _aud.PlayOneShot(_attack2AudioClip);
+        _aud.PlayOneShot(_attackFarAudioClip);
+
         yield return new WaitForSeconds(0.5f);
+
         if (_enemyAction == EnemyAction.Damaged)
         {
             yield break;
@@ -437,7 +455,6 @@ public class EnemyMoves : MonoBehaviour
         _pauseManager.OnPauseResume += PauseResume;
         _anim = gameObject.GetComponent<Animator>();
 
-
         // 呼んで欲しいメソッドを登録する。
         _justKaihiManager.OnJustKaihiResume += PauseResumeJustKaihi;
         // _anim = gameObject.GetComponent<Animator>();
@@ -447,7 +464,6 @@ public class EnemyMoves : MonoBehaviour
     {
         // OnDisable ではメソッドの登録を解除すること。さもないとオブジェクトが無効にされたり破棄されたりした後にエラーになってしまう。
         _pauseManager.OnPauseResume -= PauseResume;
-
 
         // OnDisable ではメソッドの登録を解除すること。さもないとオブジェクトが無効にされたり破棄されたりした後にエラーになってしまう。
         _justKaihiManager.OnJustKaihiResume -= PauseResumeJustKaihi;
@@ -473,7 +489,6 @@ public class EnemyMoves : MonoBehaviour
         _rb.velocity = new Vector3(_rb.velocity.x / 10, _rb.velocity.y / 10, 0);
         Debug.Log("Slow");
         _anim.speed = 0.3f;
-
     }
 
     public void ResumeJustKaihi()

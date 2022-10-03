@@ -65,9 +65,10 @@ public class TargetCloseAttack : MonoBehaviour
     /// <summary>攻撃可能か同課の判断</summary>
     public bool _isOkTargetAttack = true;
 
+    /// <summary>攻撃時の移動制限をするかどうか</summary>
     bool _endJudge = false;
 
-    //ターゲットシステムで使う
+    /// <summary>ターゲット攻撃中かどうかの判断（ターゲットシステムで使う）</summary>
     public bool _isTargetAttackNow = false;
 
     bool _isRevarseTargetAttack = false;
@@ -138,24 +139,24 @@ public class TargetCloseAttack : MonoBehaviour
     public void Attack()
     {
         _anim.SetBool("isTargetAttack", true);
+
         _isTargetAttackNow = true;
-        _rb.velocity = Vector3.zero;
+        _endJudge = true;
         _playerInBattle._playerAction = PlayerInBattle.PlayerAction.Attack;
 
-        _endJudge = true;
-
+        _rb.velocity = Vector3.zero;
         _nowPos = transform.position;
-        Direction();
+        Vector2 hani = _crosshairController.transform.position - transform.position;
 
-        float dir = Vector2.Distance(_targetSystem._targetEnemy.transform.position, transform.position);
+        Direction();　//向き調整の関数
+
         _targetAttackCount++;
 
-        Vector2 hani = _crosshairController.transform.position - transform.position;
 
         if (_isOkTargetAttack)
         {
             _attackCloseController.airTime = 0;
-            if (_targetAttackCount != 1)      //ターゲットが近い時
+            if (_targetAttackCount != 1)      //2回目以降の攻撃
             {
                 //それぞれの向いてる角度で-45~45度までの範囲に入っているか。
                 if (transform.localScale.x == 1 && hani.normalized.x >= 0.3 && (hani.normalized.y <= 0.9 && hani.normalized.y >= -0.9f)
@@ -166,12 +167,13 @@ public class TargetCloseAttack : MonoBehaviour
                         _weaponAnim.Play("Zangeki4");
                         var go = Instantiate(_effectEnd);
                         go.transform.position = _effectPos.position;
-                        _isOkTargetAttack = false;    //ターゲット攻撃を不可
+
                         _enemyBox.transform.DetachChildren();   //敵を子オブジェクトから外す
 
-                        StartCoroutine(TargetAttackNear());
+                        StartCoroutine(TargetAttackNear());　//敵との距離が近いときの判定
                         StartCoroutine(TargetEnemyCoolTime());  //クールタイムを数える
 
+                        _isOkTargetAttack = false;    //ターゲット攻撃を不可
                         _isReleaceEnemy = false;
 
                         _attackCloseController._isAttackNow = false;
@@ -181,12 +183,13 @@ public class TargetCloseAttack : MonoBehaviour
                     }
                     else
                     {
-                        _attackCloseController._downSpeed = true;
                         _targetSystem._targetEnemy.transform.SetParent(_enemyBox.transform); //敵を自身の子オブジェクトにする
+
                         StartCoroutine(TargetAttackNear());
 
                         _rb.AddForce(hani.normalized * _attackMovedPower, ForceMode.Impulse);
 
+                        _attackCloseController._downSpeed = true;
                         _releaseEnemyCount = 0;
                         _isReleaceEnemy = true;
 
@@ -213,16 +216,15 @@ public class TargetCloseAttack : MonoBehaviour
                 }
                 else                        ///////ターゲット攻撃を中止、他の方向の攻撃に移る////////
                 {
-                    _weaponAnim.Play("Zangeki4");
                     var go = Instantiate(_effectEnd);
                     go.transform.position = _effectPos.position;
-                    StartCoroutine(RevarseTargetAttack());
 
+                    StartCoroutine(RevarseTargetAttack()); //敵を離す
+                    _weaponAnim.Play("Zangeki4");
                 }
             }
-            else if (_targetAttackCount > 0)
+            else if (_targetAttackCount > 0) //1回目の攻撃
             {
-
                 if (hani.x >= 0)
                 {
                     transform.localScale = new Vector3(1, 1, 1);
@@ -231,73 +233,64 @@ public class TargetCloseAttack : MonoBehaviour
                 {
                     transform.localScale = new Vector3(-1, 1, 1);
                 }
-
-                _attackCloseController._downSpeed = true;
-                StartCoroutine(TargetAttackFar());
+                StartCoroutine(TargetAttackFirst());
 
                 _releaseEnemyCount = 0;
                 _isReleaceEnemy = true;
+                _attackCloseController._downSpeed = true;
                 return;
             }
-            else
-            {
-                Debug.Log("NOOOOO");
-                StartCoroutine(TestMoveEnd());
-            }
         }
-
     }
 
-    /// <summary>普通に切るターゲットアタック(近いとき)</summary>
+    /// <summary>普通に切るターゲットアタック(2回目以降の攻撃)</summary>
     public IEnumerator TargetAttackNear()
     {
         Rigidbody _rbEnemy = _targetSystem._targetEnemy.GetComponent<Rigidbody>();
         if (_targetAttackCount == 5)//敵を向いてる方向に弾き飛ばす
         {
-            _aud.PlayOneShot(_auClip[2]);
-            _anim.Play("P_TargetAttackEnd");
-
             if (FindObjectOfType<EnemyMoves>())
             {
                 FindObjectOfType<EnemyMoves>()._isDamagedTargetAttack = false;
             }
+
+            //敵の動きの制御を解除、前方に吹き飛ばす
             _rbEnemy.isKinematic = false;
             Vector2 ve = new Vector2(transform.localScale.x, 1);
             _rbEnemy.AddForce(ve * _barsePower, ForceMode.Impulse);
             _targetSystem._targetEnemy = null;
 
+            _isTargetAttackNow = false;
+
             _playerInBattle._playerAction = PlayerInBattle.PlayerAction.Nomal;
             _anim.SetBool("isTargetAttack", false);
-            _isTargetAttackNow = false;
+            _aud.PlayOneShot(_auClip[2]);
+            _anim.Play("P_TargetAttackEnd");
         }
         else
         {
-            _aud.PlayOneShot(_auClip[1]);
-            _anim.Play("P_TargetAttack2");
-            //_rbEnemy.velocity = Vector3.zero;
             _rbEnemy.isKinematic = true;
+            _aud.PlayOneShot(_auClip[1]);
 
+            _anim.Play("P_TargetAttack2");
             yield return new WaitForSeconds(0.2f);
-
-            //if (_attackCloseController._isGround == true)
-            //{
             _attackCloseController._isAttackNow = false;
-            //_attackCloseController._closeAttack = false;
-            //}
         }
     }
 
-    /// <summary>敵を引き寄せるターゲットアタック(遠い時)</summary>
-    public IEnumerator TargetAttackFar()
+    /// <summary>敵を引き寄せる。最初の攻撃</summary>
+    public IEnumerator TargetAttackFirst()
     {
-        _aud.PlayOneShot(_auClip[0]);
-        _anim.Play("P_TargetAttackS");
-        var go = Instantiate(_farEffect);
-        go.transform.position = _targetSystem._targetEnemy.transform.position;
-        go.transform.SetParent(_targetSystem._targetEnemy.transform);
         Rigidbody _rbEnemy = _targetSystem._targetEnemy.GetComponent<Rigidbody>();
         Vector3 velo = _attractPos.position - _targetSystem._targetEnemy.transform.position;
         _rbEnemy.AddForce(velo.normalized * _attractPower, ForceMode.Impulse);
+
+        var go = Instantiate(_farEffect);
+        go.transform.position = _targetSystem._targetEnemy.transform.position;
+        go.transform.SetParent(_targetSystem._targetEnemy.transform);
+
+        _aud.PlayOneShot(_auClip[0]);
+        _anim.Play("P_TargetAttackS");
 
         yield return new WaitForSeconds(0.2f);
 
@@ -309,18 +302,15 @@ public class TargetCloseAttack : MonoBehaviour
 
     }
 
+    /// <summary>敵を吹き飛ばす（攻撃中断したときに使う）</summary>
     IEnumerator RevarseTargetAttack()
     {
-        _playerInBattle._playerAction = PlayerInBattle.PlayerAction.Nomal;
-        _anim.Play("P_TargetAttackEnd");
-        _aud.PlayOneShot(_auClip[2]);
-
+        Vector2 hani = _crosshairController.transform.position - transform.position;
         if (FindObjectOfType<EnemyMoves>())
         {
             FindObjectOfType<EnemyMoves>()._isDamagedTargetAttack = false;
         }
 
-        Vector2 hani = _crosshairController.transform.position - transform.position;
 
         _isRevarseTargetAttack = true;
         _targetAttackCount = 0;    //ターゲット攻撃の値のリセット
@@ -329,19 +319,22 @@ public class TargetCloseAttack : MonoBehaviour
         _isOkTargetAttack = false;    //ターゲット攻撃を不可
         _enemyBox.transform.DetachChildren();   //敵を子オブジェクトから外す
 
-
-        Rigidbody _rbEnemy = _targetSystem._targetEnemy.GetComponent<Rigidbody>(); //敵を向いてる方向に弾き飛ばす
+        //敵を向いてる方向に弾き飛ばす
+        Rigidbody _rbEnemy = _targetSystem._targetEnemy.GetComponent<Rigidbody>();
         _rbEnemy.isKinematic = false;
         Vector2 ve = new Vector2(transform.localScale.x, 1);
         _rbEnemy.AddForce(ve * _barsePower, ForceMode.Impulse);
         _targetSystem._targetEnemy = null;
 
-        yield return new WaitForSeconds(0.5f);
-        _anim.SetBool("isTargetAttack", false);
-        _isTargetAttackNow = false;
-
-        _attackCloseController._downSpeed = false;
         _playerInBattle._playerAction = PlayerInBattle.PlayerAction.Nomal;
+        _anim.Play("P_TargetAttackEnd");
+        _aud.PlayOneShot(_auClip[2]);
+
+        yield return new WaitForSeconds(0.5f);
+
+        _isTargetAttackNow = false;
+        _attackCloseController._downSpeed = false;
+
 
         StartCoroutine(TargetEnemyCoolTime());
         if (hani.x >= 0)
@@ -352,44 +345,44 @@ public class TargetCloseAttack : MonoBehaviour
         {
             transform.localScale = new Vector3(-1, 1, 1);
         }
-        //_nowPos = transform.position;
         _rb.AddForce(hani.normalized * _attackMovedPower, ForceMode.Impulse);
 
 
         _attackCloseController._isAttackNow = false;
-
+        _playerInBattle._playerAction = PlayerInBattle.PlayerAction.Nomal;
+        _anim.SetBool("isTargetAttack", false);
     }
 
 
 
 
-
+    /// <summary>攻撃のクールタイム </summary>
+    /// <returns></returns>
     public IEnumerator TargetEnemyCoolTime()
     {
+        //中断したか最後まで攻撃したかで、クールタイムが変わる
         if (_isTargetEnemyBefor)
         {
             yield return new WaitForSeconds(_targetEnemyBeforCoolTime);
         }
         else { yield return new WaitForSeconds(_targetEnemyAfterCoolTime); }
 
-        Debug.Log("COOOl");
         _isOkTargetAttack = true;
-
-
         _targetAttackCount = 0;
     }
 
-    public IEnumerator TestMoveEnd()
-    {
-        if (_attackCloseController._attackCount == 5)//_attackCloseController._isGround || 
-        {
-            FindObjectOfType<EnemyMoves>()._isDamagedTargetAttack = false;
-            yield return new WaitForSeconds(0.3f);
-            _attackCloseController._closeAttack = false;
-            _attackCloseController._isAttackNow = false;
-            _playerInBattle._playerAction = PlayerInBattle.PlayerAction.Nomal;
-        }
-    }
+
+    //public IEnumerator TestMoveEnd()
+    //{
+    //    if (_attackCloseController._attackCount == 5)//_attackCloseController._isGround || 
+    //    {
+    //        FindObjectOfType<EnemyMoves>()._isDamagedTargetAttack = false;
+    //        yield return new WaitForSeconds(0.3f);
+    //        _attackCloseController._closeAttack = false;
+    //        _attackCloseController._isAttackNow = false;
+    //        _playerInBattle._playerAction = PlayerInBattle.PlayerAction.Nomal;
+    //    }
+    //}
 
     public void ReleaseEnemy()
     {
@@ -427,7 +420,7 @@ public class TargetCloseAttack : MonoBehaviour
 
             _isOkTargetAttack = false;
             StartCoroutine(TargetEnemyCoolTime());
-            StartCoroutine(TestMoveEnd());
+       //    StartCoroutine(TestMoveEnd());
 
 
             _attackCloseController._closeAttack = false;

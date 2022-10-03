@@ -15,16 +15,7 @@ public class EffectsSystems : MonoBehaviour
 
     Animator _anim;
     Rigidbody _rb;
-    void Start()
-    {
 
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
 
     private void Awake()
     {

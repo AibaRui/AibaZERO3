@@ -13,7 +13,8 @@ public class DownAttack : MonoBehaviour
 
     [Header("降下攻撃のエフェクト")]
     [Tooltip("攻撃時の移動スピード")] [SerializeField] GameObject _downAttackEffect;
-
+    AudioSource _aud;
+    [SerializeField] AudioClip audioClip;
 
     bool _isDownNow = false;
     bool _isGround = false;
@@ -25,6 +26,7 @@ public class DownAttack : MonoBehaviour
         _rb = gameObject.GetComponent<Rigidbody>();
         _anim = gameObject.GetComponent<Animator>();
         _weaponAnim = _weaponAnim.GetComponent<Animator>();
+        _aud = gameObject.GetComponent<AudioSource>();
     }
     void Update()
     {
@@ -49,6 +51,7 @@ public class DownAttack : MonoBehaviour
     {
         if (_isDownNow && _isGround)
         {
+            _aud.PlayOneShot(audioClip);
             StartCoroutine(CoolTime());
             var effect = Instantiate(_downAttackEffect); //エフェクトを出す
             effect.transform.position = transform.position;
@@ -79,6 +82,7 @@ public class DownAttack : MonoBehaviour
 
             if (_isDownNow)         //降下攻撃のエフェクト
             {
+                _aud.PlayOneShot(audioClip);
                 _weaponAnim.Play("DownAttack");
                 // okAttack = false;
                 var effect = Instantiate(_downAttackEffect); //エフェクトを出す

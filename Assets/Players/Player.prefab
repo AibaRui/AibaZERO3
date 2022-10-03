@@ -266,6 +266,7 @@ GameObject:
   - component: {fileID: 1846562913761806015}
   - component: {fileID: 1846562913761806008}
   - component: {fileID: 2094998834}
+  - component: {fileID: 313558592}
   m_Layer: 8
   m_Name: Weapons
   m_TagString: Untagged
@@ -388,6 +389,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isPlayer: 1
+--- !u!114 &313558592
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1846562913761806012}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6757c1d17e2dc647b4a028de32a41cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _isPlayer: 0
 --- !u!1 &1846562913773277688
 GameObject:
   m_ObjectHideFlags: 0
@@ -660,7 +674,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2894751061275586579
 Transform:
   m_ObjectHideFlags: 0
@@ -822,6 +836,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _moveSpeed: 2
   _jumpPower: 4
+  _hp: 20
   _damaged: 0
   _kaihi: {fileID: 1846562913820487521}
   _attackCloseController: {fileID: 1846562914345935103}
@@ -898,6 +913,7 @@ MonoBehaviour:
   _attackCloseController: {fileID: 1846562914345935103}
   _attackSpeed: 50
   _downAttackEffect: {fileID: 4534118839785862611, guid: 48e2f10ada20ea44a88aae5ab0c97dc3, type: 3}
+  audioClip: {fileID: 8300000, guid: 837fe58261af8534a901a92b5d82d034, type: 3}
   _weaponAnim: {fileID: 1846562913761806015}
 --- !u!114 &1846562914345935103
 MonoBehaviour:

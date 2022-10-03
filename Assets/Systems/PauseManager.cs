@@ -23,7 +23,7 @@ public class PauseManager : MonoBehaviour
     void Update()
     {
         // ESC キーが押されたら一時停止・再開を切り替える
-        if (Input.GetKeyDown(KeyCode.Tab))
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
             PauseResume();
         }
@@ -34,6 +34,11 @@ public class PauseManager : MonoBehaviour
     {
         _pauseFlg = !_pauseFlg;
         _isPause = !_isPause;
-        _onPauseResume(_pauseFlg);  // これで変数に代入した関数を（全て）呼び出せる
+
+        if (_onPauseResume != null)
+        {
+            _onPauseResume(_pauseFlg);  // これで変数に代入した関数を（全て）呼び出せる
+        }
+
     }
 }

@@ -131,7 +131,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89609e6d5f9a96647b165b61b1d30bbe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _hp: 1
+  _hp: 10
   _moveSpeed: 3
   _attackCoolTime: 3
   _longAttackEffect: {fileID: 4429220866372007953, guid: 75ce6c04bc7d20c408ebf12641d5fcc7, type: 3}

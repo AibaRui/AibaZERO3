@@ -257,7 +257,7 @@ GameObject:
   - component: {fileID: -8147051861117201328}
   m_Layer: 0
   m_Name: DownAttack(Black) 1_0
-  m_TagString: Untagged
+  m_TagString: P_Attack
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
