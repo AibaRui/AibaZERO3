@@ -21,6 +21,8 @@ public class PlayerInBattle : MonoBehaviour
     [SerializeField] P_Kaihi _kaihi;
     [SerializeField] AttackCloseController _attackCloseController;
 
+
+
     PauseManager _pauseManager = default;
     Vector3 _angularVelocity;
     Vector3 _velocity;
@@ -83,7 +85,6 @@ public class PlayerInBattle : MonoBehaviour
             _isJump = false;
             _isGround = false;
         }
-
     }
 
 
