@@ -10,6 +10,7 @@ public class PauseManager : MonoBehaviour
     bool _pauseFlg = false;
     /// <summary>一時停止・再開を制御する関数の型（デリゲート）を定義する</summary>
     public delegate void Pause(bool isPause);
+
     /// <summary>デリゲートを入れておく変数</summary>
     Pause _onPauseResume = default;
 
